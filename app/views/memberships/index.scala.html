@@ -1,0 +1,13 @@
+@(memberships: Seq[models.memberships.Membership])
+
+<h1>Memberships</h1>
+<ul>
+@for(membership <- memberships) {
+	<li>
+		@membership.membershipId
+		@membership.begin
+		<a href="@controllers.routes.Memberships.details(membership.id)">details</a>
+	</li>
+}
+</ul>
+<a href="@controllers.routes.Memberships.form">add</a>
