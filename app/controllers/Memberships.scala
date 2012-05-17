@@ -25,7 +25,7 @@ object Memberships extends Controller {
   	}
 
 	def list(page: Int = 1) = Action {
-		val memberships = Membership.findAll
+		val memberships = Membership.findAllMembershipsPersons
 		Ok(views.html.memberships.index(memberships))
 	}
 

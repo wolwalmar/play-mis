@@ -34,8 +34,8 @@ Seq(format.raw/*1.45*/("""
 }
                 /*
                     -- GENERATED --
-                    DATE: Mon May 14 10:15:38 CEST 2012
-                    SOURCE: C:/Users/marquardt/Documents/play_work/play-mis/app/views/memberships/details.scala.html
+                    DATE: Mon May 14 21:49:38 CEST 2012
+                    SOURCE: /Users/prog/Documents/work/play-work/play-mis/app/views/memberships/details.scala.html
                     HASH: 40e32e9c5378a621e69466290d9ea0ae86594af1
                     MATRIX: 542->1|657->44|710->67|728->77|762->90
                     LINES: 19->1|22->1|24->3|24->3|24->3

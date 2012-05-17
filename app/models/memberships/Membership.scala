@@ -10,6 +10,8 @@ import anorm.SqlQuery
 import play.api.db.DB
 import play.api.Play.current
 
+import models.persons._
+
 case class Membership(
 	id: Long,
 	membershipId: Long,
@@ -29,10 +31,20 @@ object Membership {
 		membershipParser *
 	}
 
+	def membershipPersonParser: RowParser[(Membership,Person)] = {
+		membershipParser ~ Person.personParser map (flatten)
+	}
+
 	def findAll: List[Membership] = DB.withConnection {
 		implicit connection => 
 		val sql = SQL("select * from membership")
 		sql.as(membershipsParser)
+	}
+
+	def findAllMembershipsPersons: List[(Membership,Person)] = DB.withConnection {
+		implicit connection => 
+		val sql = SQL("select m.*,p.* from membership m join person p on p.ms_id=m.id") 
+		sql.as(membershipPersonParser *)
 	}
 
 	def findByMembershipId(membershipId: Long): Membership  = DB.withConnection {
