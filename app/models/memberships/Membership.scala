@@ -11,6 +11,7 @@ import play.api.db.DB
 import play.api.Play.current
 
 import models.persons._
+import models.finance._
 
 case class Membership(
 	id: Long,
@@ -27,8 +28,18 @@ object Membership {
 		}
 	}
 
+	val membershipIdParser: RowParser[Long] = {
+		long("next") map {
+			case next => next
+		}
+	}
+
 	val membershipsParser: ResultSetParser[List[Membership]] = {
 		membershipParser *
+	}
+
+	val membershipIdRSParser: ResultSetParser[List[Long]] = {
+		membershipIdParser *
 	}
 
 	def membershipPersonParser: RowParser[(Membership,Person)] = {
@@ -43,8 +54,14 @@ object Membership {
 
 	def findAllMembershipsPersons: List[(Membership,Person)] = DB.withConnection {
 		implicit connection => 
-		val sql = SQL("select m.*,p.* from membership m join person p on p.ms_id=m.id") 
+		val sql = SQL("select m.*,p.* from membership m join person p on p.ms_ref=m.id") 
 		sql.as(membershipPersonParser *)
+	}
+
+	def findMembershipPersonById(id: Long): (Membership,Person) = DB.withConnection {
+		implicit connection => 
+		val sql = SQL("select m.*,p.* from membership m join person p on p.ms_ref=m.id where m.id={id}").on("id" -> id)  
+		sql.as(membershipPersonParser *).head
 	}
 
 	def findByMembershipId(membershipId: Long): Membership  = DB.withConnection {
@@ -59,17 +76,34 @@ object Membership {
 		sql.as(membershipsParser).head
 	}
 
-	def insert(membership:Membership): Boolean = {
+	def findAllPostingsById(membershipId: Long): List[Account] = DB.withConnection {
+		implicit connection =>
+		val sql = SQL("select * from account where ms_id={membershipId}").on("membershipId" -> membershipId)
+		sql.as(Account.accountParser *)
+	}
+
+	def insert(membership:Membership) = {
 		DB.withConnection {
 			implicit connection =>
+			val next = nextSeqNum
+
+			println(next)
+
 			SQL("""insert into
 						membership
-					(ms_id,begin) values
-					({ms_id},{begin})
+					(id,ms_id,begin) values
+					({id},{ms_id},{begin})
 				""").on(
+					"id" -> next,
 					"ms_id" -> membership.membershipId,
 					"begin" -> membership.begin
-				).executeUpdate() == 1
+				).executeUpdate()
+			next
 		}
+	}
+
+	def nextSeqNum: Long = DB.withConnection {
+		implicit connection =>
+			return SQL("select ms_id_seq.nextval as next from dual").as(membershipIdRSParser).head
 	}
 }

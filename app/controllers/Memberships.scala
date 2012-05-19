@@ -7,6 +7,7 @@ import play.api.data.Forms._
 
 import views._
 import models.memberships._
+import models.persons._
 
 object Memberships extends Controller {
 	val newMembershipForm: Form[NewMembership] = Form(
@@ -30,8 +31,8 @@ object Memberships extends Controller {
 	}
 
 	def details(id: Long) = Action {
-		val membership = Membership.findById(id)
-		Ok(views.html.memberships.details(membership))
+		val membershipPerson = Membership.findMembershipPersonById(id)
+		Ok(views.html.memberships.details(membershipPerson))
 	}
 
 	def edit(id: Long) = TODO
@@ -49,7 +50,8 @@ object Memberships extends Controller {
       // We got a valid User value, display the summary
             // We got a valid User value, display the summary
       newmembership => {
-        Membership.insert(new Membership(0,newmembership.membershipid.toLong,newmembership.begin))
+        val ms_ref = Membership.insert(new Membership(0,newmembership.membershipid.toLong,newmembership.begin))
+        Person.insert(new Person(0,newmembership.name,ms_ref))
         Ok(views.html.index(""))
       }
     )

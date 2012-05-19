@@ -1,3 +1,6 @@
-@(membership: models.memberships.Membership)
+@(membershipPerson: (models.memberships.Membership,models.persons.Person))
 
-<h1>Membership No.: @membership.membershipId<h1>
+<h1>Membership No.: @membershipPerson._1.membershipId</h1>
+
+@membershipPerson._2.name <br />
+@membershipPerson._1.begin
