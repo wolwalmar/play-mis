@@ -8,6 +8,7 @@ import play.api.data.Forms._
 import views._
 import models.memberships._
 import models.persons._
+import models.finance._
 
 object Memberships extends Controller {
 	val newMembershipForm: Form[NewMembership] = Form(
@@ -52,6 +53,7 @@ object Memberships extends Controller {
       newmembership => {
         val ms_ref = Membership.insert(new Membership(0,newmembership.membershipid.toLong,newmembership.begin))
         Person.insert(new Person(0,newmembership.name,ms_ref))
+        Account.insert(new Account(0,"Beitrag",new java.util.Date,new java.math.BigDecimal("-63.90"),ms_ref))
         Ok(views.html.index(""))
       }
     )

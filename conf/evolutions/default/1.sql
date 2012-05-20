@@ -24,6 +24,7 @@ create table account (
 );
 
 # --- !Downs
+drop table account;
 drop table person;
 drop table membership;
 drop sequence ms_id_seq;

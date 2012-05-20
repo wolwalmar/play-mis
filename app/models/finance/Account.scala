@@ -12,12 +12,29 @@ import java.math.BigDecimal
 
 import play.api.db.DB
 import play.api.Play.current
-case class Account(id: Long, text: String, date: Date, amount: BigDecimal)
+case class Account(id: Long, postingtext: String, posted: Date, amount: BigDecimal, ms_ref: Long)
 
 object Account {
 	val accountParser: RowParser[Account] = {
-		long("id") ~ str("text") ~ date("date") ~ get[BigDecimal]("amount") map {
-			case id ~ text ~ date ~ amount => Account(id, text, date, amount)
+		long("id") ~ str("postingtext") ~ date("posted") ~ long("ms_ref") ~ get[BigDecimal]("amount") map {
+			case id ~ postingtext ~ posted ~ ms_ref ~ amount => Account(id, postingtext, posted, amount, ms_ref)
 		}
 	}
+
+	def insert(a: Account): Boolean = {
+		DB.withConnection {
+			implicit connection =>
+			SQL("""insert into
+						account 
+					(postingtext,posted, amount, ms_ref) values
+					({postingtext},{posted},{amount},{ms_ref})
+				""").on(
+					"postingtext" -> a.postingtext,
+					"posted" -> a.posted,
+					"amount" -> a.amount,
+					"ms_ref" -> a.ms_ref
+				).executeUpdate() == 1
+		}
+	}
+
 }

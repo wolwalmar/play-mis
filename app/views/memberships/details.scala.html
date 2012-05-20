@@ -1,6 +1,18 @@
-@(membershipPerson: (models.memberships.Membership,models.persons.Person))
+@(membershipPerson: (models.memberships.Membership,models.persons.Person, List[models.finance.Account]))
 
 <h1>Membership No.: @membershipPerson._1.membershipId</h1>
 
 @membershipPerson._2.name <br />
 @membershipPerson._1.begin
+
+<ul>
+@for(posting <- membershipPerson._3) {
+	<li>
+		@posting.posted
+		@posting.postingtext
+		@posting.amount
+	</li>
+}
+
+</ul>
+<a href="@routes.Memberships.list()">Zurück</a>
