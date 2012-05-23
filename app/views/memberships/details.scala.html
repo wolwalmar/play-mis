@@ -1,12 +1,13 @@
-@(membershipPerson: (models.memberships.Membership,models.persons.Person, List[models.finance.Account]))
+@(membershipPerson: (models.memberships.Membership,models.persons.Person,models.persons.Address, List[models.finance.Account]))
 
 <h1>Membership No.: @membershipPerson._1.membershipId</h1>
 
 @membershipPerson._2.name <br />
+@membershipPerson._3.street <br />
 @membershipPerson._1.begin
 
 <ul>
-@for(posting <- membershipPerson._3) {
+@for(posting <- membershipPerson._4) {
 	<li>
 		@posting.posted
 		@posting.postingtext

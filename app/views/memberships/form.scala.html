@@ -8,6 +8,7 @@
         @helper.inputText(newMembershipForm("membershipid"),'_error -> newMembershipForm.globalError) 
         @helper.inputDate(newMembershipForm("begin"))   
         @helper.inputText(newMembershipForm("name"))   
+        @helper.inputText(newMembershipForm("street"))   
         <input type="submit" class="btn primary" value="Sign Up">
         <a href="@routes.Application.index" class="btn">Cancel</a>
     }

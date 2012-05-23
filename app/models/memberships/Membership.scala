@@ -50,6 +50,10 @@ object Membership {
 		membershipParser ~ Person.personParser ~ Account.accountParser map (flatten)
 	}
 
+	def membershipPersonAddressParser: RowParser[(Membership,Person,Address)] = {
+		membershipParser ~ Person.personParser ~ Address.addressParser map (flatten)
+	}
+
 	def findAll: List[Membership] = DB.withConnection {
 		implicit connection => 
 		val sql = SQL("select * from membership")
@@ -62,11 +66,11 @@ object Membership {
 		sql.as(membershipPersonParser *)
 	}
 
-	def findMembershipPersonById(id: Long): (Membership,Person,List[Account]) = DB.withConnection {
+	def findMembershipPersonById(id: Long): (Membership,Person,Address,List[Account]) = DB.withConnection {
 		implicit connection => 
-		val sql = SQL("select m.*,p.* from membership m join person p on p.ms_ref=m.id where m.id={id}").on("id" -> id)  
-		val membershipPerson = sql.as(membershipPersonParser *).head
-		(membershipPerson._1,membershipPerson._2,findAllPostingsById(id))		
+		val sql = SQL("select m.*,p.*,a.* from membership m join person p on p.ms_ref=m.id join address a on a.ms_ref=m.id where m.id={id}").on("id" -> id)  
+		val membershipPerson = sql.as(membershipPersonAddressParser *).head
+		(membershipPerson._1,membershipPerson._2,membershipPerson._3,findAllPostingsById(id))		
 	}
 
 	def findByMembershipId(membershipId: Long): Membership  = DB.withConnection {

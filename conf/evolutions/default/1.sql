@@ -14,6 +14,13 @@ create table person (
 	foreign key (ms_ref) references membership(id) 
 );
 
+create table address (
+	id long Identity primary key,
+	street varchar(50),
+	ms_ref long,
+	foreign key (ms_ref) references membership(id) 	
+);
+
 create table account (
 	id long Identity primary key,
 	postingtext varchar(100),
@@ -25,6 +32,7 @@ create table account (
 
 # --- !Downs
 drop table account;
+drop table address;
 drop table person;
 drop table membership;
 drop sequence ms_id_seq;

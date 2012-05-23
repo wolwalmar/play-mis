@@ -1,4 +1,4 @@
 
 package models.memberships
 
-case class NewMembership(membershipid: String, begin: java.util.Date, name: String);
+case class NewMembership(membershipid: String, begin: java.util.Date, name: String, street: String);
