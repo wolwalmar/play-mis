@@ -1,19 +1,24 @@
 @(membershipPerson: (models.memberships.Membership,models.persons.Person,models.persons.Address, List[models.finance.Account]))
 
-<h1>Membership No.: @membershipPerson._1.membershipId</h1>
+@main("Welcome to Play 2.0") {
+	<hr />
+	<h1>Membership No.: @membershipPerson._1.membershipId</h1>
+	<hr />
+	Name: @membershipPerson._2.name <br />
+	Straße: @membershipPerson._3.street <br />
+	Eintritt: @membershipPerson._1.begin
 
-@membershipPerson._2.name <br />
-@membershipPerson._3.street <br />
-@membershipPerson._1.begin
+	<hr />
+	<b>Konto </b><br />
+	<ul>
+	@for(posting <- membershipPerson._4) {
+		<li>
+			@posting.posted
+			@posting.postingtext
+			@posting.amount
+		</li>
+	}
 
-<ul>
-@for(posting <- membershipPerson._4) {
-	<li>
-		@posting.posted
-		@posting.postingtext
-		@posting.amount
-	</li>
+	</ul>
+	<a href="@routes.Memberships.list()">Zurück</a>
 }
-
-</ul>
-<a href="@routes.Memberships.list()">Zurück</a>

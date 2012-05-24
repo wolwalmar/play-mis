@@ -1,14 +1,16 @@
 @(memberships: Seq[(models.memberships.Membership,models.persons.Person)])
 
-<h1>Memberships</h1>
-<ul>
-@for(membership <- memberships) {
-	<li>
-		@membership._1.membershipId
-		@membership._2.name
-		@membership._1.begin
-		<a href="@controllers.routes.Memberships.details(membership._1.id)">details</a>
-	</li>
+@main("Welcome to Play 2.0") {
+	<h1>Memberships</h1>
+	<ul>
+	@for(membership <- memberships) {
+		<li>
+			@membership._1.membershipId
+			@membership._2.name
+			@membership._1.begin
+			<a href="@controllers.routes.Memberships.details(membership._1.id)">details</a>
+		</li>
+	}
+	</ul>
+	<a href="@controllers.routes.Memberships.form">add</a>
 }
-</ul>
-<a href="@controllers.routes.Memberships.form">add</a>
