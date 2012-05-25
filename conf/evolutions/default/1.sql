@@ -9,7 +9,8 @@ create table membership (
 
 create table person (
 	id long Identity primary key,
-	name varchar(50),
+	firstname varchar(50),
+	lastname varchar(50),
 	ms_ref long,
 	foreign key (ms_ref) references membership(id) 
 );

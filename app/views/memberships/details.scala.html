@@ -4,21 +4,78 @@
 	<hr />
 	<h1>Membership No.: @membershipPerson._1.membershipId</h1>
 	<hr />
-	Name: @membershipPerson._2.name <br />
-	Straße: @membershipPerson._3.street <br />
-	Eintritt: @membershipPerson._1.begin
 
-	<hr />
-	<b>Konto </b><br />
-	<ul>
-	@for(posting <- membershipPerson._4) {
-		<li>
-			@posting.posted
-			@posting.postingtext
-			@posting.amount
-		</li>
-	}
+	<div class="span-12">
+		<fieldset>
+			<legend>Mitgliedsdaten</legend>
+			<label>Vorname:</label> @membershipPerson._2.firstname <br />
+			<label>Zuname:</label> @membershipPerson._2.lastname <br />
+		</fieldset>
+	</div>
 
-	</ul>
-	<a href="@routes.Memberships.list()">Zurück</a>
+	<div class="span-12 last">
+		<fieldset>
+			<legend>Adresse</legend>
+			<label>Straße:</label> @membershipPerson._3.street <br />
+			<label></label>  <br />
+		</fieldset>
+	</div>
+
+
+	<div class="span-24 last">
+		<fieldset>
+			<legend>Mitgliedschaft</legend>
+			<label>Eintritt:</label> @membershipPerson._1.begin			
+			<label></label>  <br />
+		</fieldset>
+	</div>
+
+	<div class="span-12">
+		<fieldset>
+			<legend>Konto</legend>
+
+		    <table summary="This is the summary text for this table."  border="0" cellspacing="0" cellpadding="0">
+		    	<caption><em>Einzahlungen und Belastungen</em></caption>
+		        <thead>
+		        	<tr>
+		            	<th class="span-4">Datum</th>
+		            	<th class="span-4">Betreff</th>
+		              	<th class="span-4 last" ><div align="right">Betrag</div></th>
+		            </tr>
+		        </thead>
+		        <tfoot>
+		        	<tr>
+		            	<td colspan="3"><div align="right">@membershipPerson._4.foldLeft(scala.math.BigDecimal(0))((f:scala.math.BigDecimal,p:models.finance.Account) => f+p.amount)</div></td>
+		            </tr>
+		        </tfoot>
+		        <tbody>
+					@for(posting <- membershipPerson._4) {
+			            <tr>
+		    	          <td>@posting.posted</td>
+		        	      <td>@posting.postingtext</td>
+		            	  <td><div align="right">@posting.amount</div></td>
+		            	</tr>
+		            }
+		         </tbody>
+		    </table>
+		</fieldset>
+	</div>
+
+	<div class="span-12 last">
+		<fieldset>
+			<legend>Memo</legend>
+			<p>Dies soll das Memo werden</p>
+			<label></label>  <br />		
+			<label></label>  <br />		
+			<label></label>  <br />		
+			<label></label>  <br />		
+			<label></label>  <br />		
+		</fieldset>	
+	</div>
+
+
+	<div class="span-10" >
+		<a href="@routes.Memberships.list()">Zurück</a>
+	</div>
+	<div class="span-14 last" />
 }

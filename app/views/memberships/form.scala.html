@@ -5,11 +5,21 @@
 
 @main("New") {
     @helper.form(action = routes.Memberships.submit) {
-        @helper.inputText(newMembershipForm("membershipid"),'_error -> newMembershipForm.globalError) 
-        @helper.inputDate(newMembershipForm("begin"))   
-        @helper.inputText(newMembershipForm("name"))   
-        @helper.inputText(newMembershipForm("street"))   
-        <input type="submit" class="btn primary" value="Sign Up">
-        <a href="@routes.Application.index" class="btn">Cancel</a>
+    	<fieldset>
+    		<legend>Mitgliedsdaten</legend>
+	        @helper.inputText(newMembershipForm("firstname"),args= 'class -> "text", 'placeholder -> "Vorname", '_label -> "Vorname")   
+	        @helper.inputText(newMembershipForm("lastname"),args= 'class -> "text", 'placeholder -> "Zuname", '_label -> "Zuname")   
+	    </fieldset>
+	    <fieldset>
+	    	<legend>Adresse</legend>
+	        @helper.inputText(newMembershipForm("street"))   
+		</fieldset>
+		<fieldset>
+			<legend>Mitgliedschaft</legend>	    	
+	        @helper.inputText(newMembershipForm("membershipid"),'_error -> newMembershipForm.globalError) 
+	        @helper.inputDate(newMembershipForm("begin"))   
+	        <input type="submit" class="btn primary" value="Sign Up">
+	        <a href="@routes.Application.index" class="btn">Cancel</a>
+        </fieldset>
     }
 }

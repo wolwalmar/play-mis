@@ -15,7 +15,8 @@ object Memberships extends Controller {
 		mapping(
       		"membershipid" -> text,
           "begin" -> date,
-      		"name" -> text,
+      		"firstname" -> text,
+          "lastname" -> text,
           "street" -> text
       	) 
 		(NewMembership.apply)(NewMembership.unapply)
@@ -53,7 +54,7 @@ object Memberships extends Controller {
             // We got a valid User value, display the summary
       newmembership => {
         val ms_ref = Membership.insert(new Membership(0,newmembership.membershipid.toLong,newmembership.begin))
-        Person.insert(new Person(0,newmembership.name,ms_ref))
+        Person.insert(new Person(0,newmembership.firstname,newmembership.lastname,ms_ref))
         Address.insert(new Address(0,newmembership.street,ms_ref))
         Account.insert(new Account(0,"Beitrag",new java.util.Date,new java.math.BigDecimal("-63.90"),ms_ref))
         Ok(views.html.index(""))

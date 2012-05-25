@@ -6,7 +6,8 @@
 	@for(membership <- memberships) {
 		<li>
 			@membership._1.membershipId
-			@membership._2.name
+			@membership._2.firstname
+			@membership._2.lastname
 			@membership._1.begin
 			<a href="@controllers.routes.Memberships.details(membership._1.id)">details</a>
 		</li>
