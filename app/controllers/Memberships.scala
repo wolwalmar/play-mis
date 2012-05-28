@@ -14,10 +14,18 @@ object Memberships extends Controller {
 	val newMembershipForm: Form[NewMembership] = Form(
 		mapping(
       		"membershipid" -> text,
-          "begin" -> date,
+          "begin_ms" -> date,
+          "end_ms" -> date,
+          "contrib" -> text,
+          "salutation" -> text,
+          "title" -> text,
       		"firstname" -> text,
           "lastname" -> text,
-          "street" -> text
+          "birthday" -> date,
+          "street" -> text,
+          "number" -> text,
+          "zip" -> text,
+          "city" -> text
       	) 
 		(NewMembership.apply)(NewMembership.unapply)
 	)
@@ -53,9 +61,24 @@ object Memberships extends Controller {
       // We got a valid User value, display the summary
             // We got a valid User value, display the summary
       newmembership => {
-        val ms_ref = Membership.insert(new Membership(0,newmembership.membershipid.toLong,newmembership.begin))
-        Person.insert(new Person(0,newmembership.firstname,newmembership.lastname,ms_ref))
-        Address.insert(new Address(0,newmembership.street,ms_ref))
+        val ms_ref = Membership.insert(new Membership(0,
+                            newmembership.membershipid.toLong,
+                            newmembership.begin_ms,
+                            newmembership.end_ms,
+                            newmembership.contrib.toInt))
+        Person.insert(new Person(0,
+                            newmembership.salutation,
+                            newmembership.title,
+                            newmembership.firstname,
+                            newmembership.lastname,
+                            newmembership.birthday,
+                            ms_ref))
+        Address.insert(new Address(0,
+                            newmembership.street,
+                            newmembership.number,
+                            newmembership.zip,
+                            newmembership.city,
+                            ms_ref))
         Account.insert(new Account(0,"Beitrag",new java.util.Date,new java.math.BigDecimal("-63.90"),ms_ref))
         Ok(views.html.index(""))
       }

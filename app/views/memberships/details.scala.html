@@ -2,22 +2,38 @@
 
 @main("Welcome to Play 2.0") {
 	<hr />
-	<h1>Membership No.: @membershipPerson._1.membershipId</h1>
+	<h1>@membershipPerson._1.membershipId @membershipPerson._2.lastname,@membershipPerson._2.firstname</h1>
 	<hr />
 
 	<div class="span-12">
 		<fieldset>
 			<legend>Mitgliedsdaten</legend>
-			<label>Vorname:</label> @membershipPerson._2.firstname <br />
-			<label>Zuname:</label> @membershipPerson._2.lastname <br />
+			<div class="span-2"><label>Anrede:</label></div>
+			<div class="span-3">@membershipPerson._2.salutation</div>
+			<div class="span-2"><label>Titel:</label></div>
+			<div class="span-2">@membershipPerson._2.title</div><br />
+			<div class="span-2"><label>Vorname:</label></div>
+			<div class="span-2">@membershipPerson._2.firstname</div><br />
+			<div class="span-2"><label>Zuname:</label></div>
+			<div class="span-2">@membershipPerson._2.lastname</div><br />
+			<div class="span-2"><label>Geburtstag:</label></div>
+			<div class="span-2">@membershipPerson._2.birthday</div>
+
 		</fieldset>
 	</div>
 
 	<div class="span-12 last">
 		<fieldset>
 			<legend>Adresse</legend>
-			<label>Straße:</label> @membershipPerson._3.street <br />
-			<label></label>  <br />
+			<div class="span-2"><label>Straße:</label></div>
+			<div class="span-2">@membershipPerson._3.street @membershipPerson._3.number</div> <br />
+			<div class="span-2"><label>PLZ:</label></div>
+			<div class="span-2">@membershipPerson._3.zip</div> <br />
+			<div class="span-2"><label>Ort:</label></div>
+			<div class="span-2">@membershipPerson._3.city</div> <br />
+			<div class="span-2"><label>RSV seit:</label></div>
+			<div class="span-2">12.09.2011</div>
+
 		</fieldset>
 	</div>
 
@@ -25,8 +41,9 @@
 	<div class="span-24 last">
 		<fieldset>
 			<legend>Mitgliedschaft</legend>
-			<label>Eintritt:</label> @membershipPerson._1.begin			
-			<label></label>  <br />
+			<label>Eintritt:</label> @membershipPerson._1.begin_ms			
+			<label>Austritt:</label> @membershipPerson._1.end_ms
+			<label>Beitr.Grp.:</label> @membershipPerson._1.contrib
 		</fieldset>
 	</div>
 

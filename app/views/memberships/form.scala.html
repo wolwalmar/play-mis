@@ -7,17 +7,25 @@
     @helper.form(action = routes.Memberships.submit) {
     	<fieldset>
     		<legend>Mitgliedsdaten</legend>
+	        @helper.inputText(newMembershipForm("salutation"),args= 'class -> "text", 'placeholder -> "Anrede", '_label -> "Anrede")
+	        @helper.inputText(newMembershipForm("title"),args= 'class -> "text", 'placeholder -> "Titel", '_label -> "Titel")   
 	        @helper.inputText(newMembershipForm("firstname"),args= 'class -> "text", 'placeholder -> "Vorname", '_label -> "Vorname")   
-	        @helper.inputText(newMembershipForm("lastname"),args= 'class -> "text", 'placeholder -> "Zuname", '_label -> "Zuname")   
+	        @helper.inputText(newMembershipForm("lastname"),args= 'class -> "text", 'placeholder -> "Zuname", '_label -> "Zuname")
+	        @helper.inputText(newMembershipForm("birthday"),args= 'class -> "date", '_label -> "Geburtstag")   
 	    </fieldset>
 	    <fieldset>
 	    	<legend>Adresse</legend>
 	        @helper.inputText(newMembershipForm("street"))   
+	        @helper.inputText(newMembershipForm("number")) 
+	        @helper.inputText(newMembershipForm("zip"))   
+	        @helper.inputText(newMembershipForm("city"))   
 		</fieldset>
 		<fieldset>
 			<legend>Mitgliedschaft</legend>	    	
 	        @helper.inputText(newMembershipForm("membershipid"),'_error -> newMembershipForm.globalError) 
-	        @helper.inputDate(newMembershipForm("begin"))   
+	        @helper.inputDate(newMembershipForm("begin_ms"))  
+	        @helper.inputDate(newMembershipForm("end_ms"))  
+	        @helper.inputDate(newMembershipForm("contrib"))   
 	        <input type="submit" class="btn primary" value="Sign Up">
 	        <a href="@routes.Application.index" class="btn">Cancel</a>
         </fieldset>

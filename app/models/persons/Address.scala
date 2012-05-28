@@ -10,12 +10,18 @@ import anorm.SqlQuery
 import play.api.db.DB
 import play.api.Play.current
 
-case class Address(id: Long, street: String, ms_ref: Long)
+case class Address(
+		id: Long, 
+		street: String, 
+		number: String, 
+		zip: String, 
+		city: String, 
+		ms_ref: Long)
 
 object Address {
 	val addressParser: RowParser[Address] = {
-		long("id") ~ str("street") ~ long("ms_ref") map {
-			case id ~ street ~ ms_ref => Address(id, street, ms_ref)
+		long("id") ~ str("street") ~ str("number") ~ str("zip") ~ str("city") ~ long("ms_ref") map {
+			case id ~ street ~ number ~ zip ~ city ~ ms_ref => Address(id, street, number, zip, city, ms_ref)
 		}
 	}
 
@@ -24,10 +30,13 @@ object Address {
 			implicit connection =>
 			SQL("""insert into
 						address
-					(street,ms_ref) values
-					({street},{ms_ref})
+					(street,number,zip,city,ms_ref) values
+					({street},{number},{zip},{city},{ms_ref})
 				""").on(
 					"street" -> a.street,
+					"number" -> a.number,
+					"zip" -> a.zip,
+					"city" -> a.city,
 					"ms_ref" -> a.ms_ref
 				).executeUpdate() == 1
 		}

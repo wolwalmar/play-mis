@@ -4,13 +4,18 @@ create Sequence ms_id_seq;
 create table membership (
 	id long primary key,
 	ms_id long not null unique ,
-	begin date not null
+	begin_ms date not null,
+	end_ms date,
+	contrib integer
 );
 
 create table person (
 	id long Identity primary key,
+	salutation varchar(20),
+	title varchar(20),
 	firstname varchar(50),
 	lastname varchar(50),
+	birthday date,
 	ms_ref long,
 	foreign key (ms_ref) references membership(id) 
 );
@@ -18,6 +23,9 @@ create table person (
 create table address (
 	id long Identity primary key,
 	street varchar(50),
+	number varchar(12),
+	zip varchar(12),
+	city varchar(50),
 	ms_ref long,
 	foreign key (ms_ref) references membership(id) 	
 );

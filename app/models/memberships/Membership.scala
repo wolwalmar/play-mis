@@ -16,15 +16,19 @@ import models.finance._
 case class Membership(
 	id: Long,
 	membershipId: Long,
-	begin: Date
+	begin_ms: Date,
+	end_ms: Date,
+	contrib: Int
 )
 
 object Membership {
 	val membershipParser: RowParser[Membership] = {
 		long("id") ~ 
 		long("ms_id") ~
-		date("begin") map {
-			case id ~ membershipId ~ begin => Membership(id,membershipId,begin)
+		date("begin_ms") ~
+		date("end_ms") ~
+		int("contrib") map {
+			case id ~ membershipId ~ begin_ms ~ end_ms ~ contrib => Membership(id,membershipId,begin_ms,end_ms,contrib)
 		}
 	}
 
@@ -100,12 +104,14 @@ object Membership {
 
 			SQL("""insert into
 						membership
-					(id,ms_id,begin) values
-					({id},{ms_id},{begin})
+					(id,ms_id,begin_ms,end_ms,contrib) values
+					({id},{ms_id},{begin_ms},{end_ms},{contrib})
 				""").on(
 					"id" -> next,
 					"ms_id" -> membership.membershipId,
-					"begin" -> membership.begin
+					"begin_ms" -> membership.begin_ms,
+					"end_ms" -> membership.end_ms,
+					"contrib" -> membership.contrib
 				).executeUpdate()
 			next
 		}
