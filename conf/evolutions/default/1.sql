@@ -1,5 +1,5 @@
 # --- !Ups
-create Sequence ms_id_seq;
+create Sequence ms_id_seq start 3;
 
 create table membership (
 	id long primary key,
