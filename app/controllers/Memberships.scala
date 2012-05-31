@@ -25,7 +25,11 @@ object Memberships extends Controller {
           "street" -> text,
           "number" -> text,
           "zip" -> text,
-          "city" -> text
+          "city" -> text,
+          "begin_rsv" -> date,
+          "end_rsv" -> date,
+          "contrib_rsv" -> number,
+          "withLPI" -> boolean
       	) 
 		(NewMembership.apply)(NewMembership.unapply)
 	)
@@ -73,12 +77,17 @@ object Memberships extends Controller {
                             newmembership.lastname,
                             newmembership.birthday,
                             ms_ref))
+        val rsv_ref = LegalProtectionInsurance.insert( new LegalProtectionInsurance(0,
+                            newmembership.begin_rsv,
+                            newmembership.end_rsv,
+                            newmembership.contrib_rsv))
         Address.insert(new Address(0,
                             newmembership.street,
                             newmembership.number,
                             newmembership.zip,
                             newmembership.city,
-                            ms_ref))
+                            ms_ref,
+                            if( newmembership.withLPI ) Some(rsv_ref) else None))
         Account.insert(new Account(0,"Beitrag",new java.util.Date,new java.math.BigDecimal("-63.90"),ms_ref))
         Ok(views.html.index(""))
       }

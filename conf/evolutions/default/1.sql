@@ -1,5 +1,6 @@
 # --- !Ups
 create Sequence ms_id_seq start 3;
+create Sequence rsv_id_seq start 3;
 
 create table membership (
 	id long primary key,
@@ -20,6 +21,13 @@ create table person (
 	foreign key (ms_ref) references membership(id) 
 );
 
+create table rsv (
+	id long Identity primary key,
+	begin_rsv date not null,
+	end_rsv date,
+	contrib integer
+);
+
 create table address (
 	id long Identity primary key,
 	street varchar(50),
@@ -27,7 +35,9 @@ create table address (
 	zip varchar(12),
 	city varchar(50),
 	ms_ref long,
-	foreign key (ms_ref) references membership(id) 	
+	foreign key (ms_ref) references membership(id),
+	rsv_ref long,
+	foreign key (rsv_ref) references rsv(id) 	
 );
 
 create table account (
@@ -41,8 +51,10 @@ create table account (
 
 # --- !Downs
 drop table account;
+drop table rsv;
 drop table address;
 drop table person;
 drop table membership;
+drop sequence rsv_id_seq;
 drop sequence ms_id_seq;
 

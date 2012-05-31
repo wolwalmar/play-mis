@@ -70,11 +70,25 @@ object Membership {
 		sql.as(membershipPersonParser *)
 	}
 
-	def findMembershipPersonById(id: Long): (Membership,Person,Address,List[Account]) = DB.withConnection {
+	def findMembershipPersonById(id: Long): (Membership,Person,Address,List[Account],Option[LegalProtectionInsurance]) = DB.withConnection {
 		implicit connection => 
-		val sql = SQL("select m.*,p.*,a.* from membership m join person p on p.ms_ref=m.id join address a on a.ms_ref=m.id where m.id={id}").on("id" -> id)  
+		val sql = SQL(
+			"select "+
+				"m.*,p.*,a.* "+
+			"from "+
+				"membership m "+
+				"join person p on p.ms_ref=m.id "+
+				"join address a on a.ms_ref=m.id "+
+			"where m.id={id}").on("id" -> id)  
 		val membershipPerson = sql.as(membershipPersonAddressParser *).head
-		(membershipPerson._1,membershipPerson._2,membershipPerson._3,findAllPostingsById(id))		
+		(membershipPerson._1,
+			membershipPerson._2,
+			membershipPerson._3,
+			findAllPostingsById(id),
+			membershipPerson._3.rsv_ref match {
+				case Some(ref) => Option(LegalProtectionInsurance.findLegalProtectionById(ref))
+				case None => None
+			})
 	}
 
 	def findByMembershipId(membershipId: Long): Membership  = DB.withConnection {

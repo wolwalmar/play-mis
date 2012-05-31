@@ -16,30 +16,44 @@ case class Address(
 		number: String, 
 		zip: String, 
 		city: String, 
-		ms_ref: Long)
+		ms_ref: Long,
+		rsv_ref: Option[Long])
 
 object Address {
 	val addressParser: RowParser[Address] = {
-		long("id") ~ str("street") ~ str("number") ~ str("zip") ~ str("city") ~ long("ms_ref") map {
-			case id ~ street ~ number ~ zip ~ city ~ ms_ref => Address(id, street, number, zip, city, ms_ref)
+		long("id") ~ str("street") ~ str("number") ~ str("zip") ~ str("city") ~ long("ms_ref") ~ get[Option[Long]]("rsv_ref") map {
+			case id ~ street ~ number ~ zip ~ city ~ ms_ref ~ rsv_ref => Address(id, street, number, zip, city, ms_ref, rsv_ref)
 		}
 	}
 
 	def insert(a: Address): Boolean = {
 		DB.withConnection {
-			implicit connection =>
-			SQL("""insert into
-						address
-					(street,number,zip,city,ms_ref) values
-					({street},{number},{zip},{city},{ms_ref})
-				""").on(
-					"street" -> a.street,
-					"number" -> a.number,
-					"zip" -> a.zip,
-					"city" -> a.city,
-					"ms_ref" -> a.ms_ref
-				).executeUpdate() == 1
+			implicit connection => {
+			val sql = a.rsv_ref match {
+				case Some(ref) => SQL("""insert into
+											address
+										(street,number,zip,city,ms_ref,rsv_ref) values
+										({street},{number},{zip},{city},{ms_ref},{rsv_ref})
+									""").on(
+										"street" -> a.street,
+										"number" -> a.number,
+										"zip" -> a.zip,
+										"city" -> a.city,
+										"ms_ref" -> a.ms_ref,
+										"rsv_ref" -> ref)
+				case None => SQL("""insert into
+											address
+										(street,number,zip,city) values
+										({street},{number},{zip},{city},{ms_ref})
+									""").on(
+										"street" -> a.street,
+										"number" -> a.number,
+										"zip" -> a.zip,
+										"city" -> a.city,
+										"ms_ref" -> a.ms_ref)
+				} 
+				sql.executeUpdate() == 1
+			}
 		}
 	}
-
 }

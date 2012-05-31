@@ -1,4 +1,4 @@
-@(membershipPerson: (models.memberships.Membership,models.persons.Person,models.persons.Address, List[models.finance.Account]))
+@(membershipPerson: (models.memberships.Membership,models.persons.Person,models.persons.Address, List[models.finance.Account], Option[models.persons.LegalProtectionInsurance]))
 
 @main("Welcome to Play 2.0") {
 	<hr />
@@ -17,8 +17,9 @@
 			<div class="span-2"><label>Zuname:</label></div>
 			<div class="span-2">@membershipPerson._2.lastname</div><br />
 			<div class="span-2"><label>Geburtstag:</label></div>
-			<div class="span-2">@membershipPerson._2.birthday</div>
+			<div class="span-2">@membershipPerson._2.birthday</div> <br />
 
+			<div class="span-2"><button id="create-user">Ändern</button></div>
 		</fieldset>
 	</div>
 
@@ -32,8 +33,13 @@
 			<div class="span-2"><label>Ort:</label></div>
 			<div class="span-2">@membershipPerson._3.city</div> <br />
 			<div class="span-2"><label>RSV seit:</label></div>
-			<div class="span-2">12.09.2011</div>
-
+			<div class="span-2">@(membershipPerson._5 match {
+				case Some(lpi) => lpi.begin_rsv
+				case None => "" })</div>
+			<div class="span-1"><label>bis:</label></div>
+			<div class="span-2">@(membershipPerson._5 match {
+				case Some(lpi) => lpi.end_rsv
+				case None => "" })</div>
 		</fieldset>
 	</div>
 
@@ -41,9 +47,12 @@
 	<div class="span-24 last">
 		<fieldset>
 			<legend>Mitgliedschaft</legend>
-			<label>Eintritt:</label> @membershipPerson._1.begin_ms			
-			<label>Austritt:</label> @membershipPerson._1.end_ms
-			<label>Beitr.Grp.:</label> @membershipPerson._1.contrib
+			<div class="span-2"><label>Eintritt:</label></div>
+			<div class="span-2">@membershipPerson._1.begin_ms</div>
+			<div class="span-2"><label>Austritt:</label></div>
+			<div class="span-4">@membershipPerson._1.end_ms</div>
+			<div class="span-2"><label>Beitr.Grp.:</label></div>
+			<div class="span-2">@membershipPerson._1.contrib</div>
 		</fieldset>
 	</div>
 
