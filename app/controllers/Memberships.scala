@@ -10,6 +10,8 @@ import models.memberships._
 import models.persons._
 import models.finance._
 
+case class Change(salutation: String, firstname: String, lastname: String)
+
 object Memberships extends Controller {
 	val newMembershipForm: Form[NewMembership] = Form(
 		mapping(
@@ -34,10 +36,20 @@ object Memberships extends Controller {
       	) 
 		(NewMembership.apply)(NewMembership.unapply)
 	)
+
+  val changeForm: Form[Change] = Form(
+    mapping(
+          "salutation_input" -> text,
+          "firstname_input" -> text,
+          "lastname_input" -> text
+        ) 
+    (Change.apply)(Change.unapply)
+  )
+
 	/**
    	 * Display an empty form.
    	*/
-  	def form = Action {
+ 	def form = Action {
     	Ok(html.memberships.form(newMembershipForm));
   	}
 
@@ -54,7 +66,14 @@ object Memberships extends Controller {
 	def edit(id: Long) = TODO
 
 	def update(id: Long) = TODO
-  def updatePerson(id: Long) = TODO
+
+  def changePerson(id: Long) = Action { implicit request =>
+    changeForm.bindFromRequest.fold(
+      errors => { println("error"); Ok("error") },
+      changes => {
+          println(changes.firstname);
+          Ok(<person><firstname>{changes.firstname}</firstname><lastname>{changes.lastname}</lastname></person>) })
+  }
 
 	  /**
    * Handle form submission.

@@ -25,6 +25,28 @@
                 "bScrollCollapse": false,
                 "sScrollY": "100px"
               });
+
+            function sendPersonForm() {
+              var xmlhttp;
+              if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+                alert('getting XMLHttpRequest');
+                xmlhttp=new XMLHttpRequest();
+              } else {// code for IE6, IE5
+                xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+              }
+              xmlhttp.onreadystatechange=function() {
+                if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+                  alert("finished");
+                  document.getElementById("firstname").innerHTML = xmlhttp.responseXML.documentElement.getElementsByTagName("firstname")[0].childNodes[0].nodeValue;
+                  document.getElementById("lastname").innerHTML = xmlhttp.responseXML.documentElement.getElementsByTagName("lastname")[0].childNodes[0].nodeValue;
+
+                }
+              }
+              xmlhttp.open("POST","/changeperson/1",true);
+              xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+              xmlhttp.send("salutation_input=Frau&firstname_input=Rosa&lastname_input=Ford");
+            }
+
             $(function() {
               $( "#change-person-dialog" ).dialog({
                 autoOpen: false,
@@ -33,22 +55,13 @@
                 modal: true,
                 buttons: {
                   OK: function() {  
-                    var xhr;
-                    xhr = new XMLHttpRequest();
-                    xhr.open("PUT","/person/1" );
-                    xhr.sent("name=Wolf");
-                    xhr.onreadystatechange = function() {
-                      if (this.readyState == 4) {
-                        if (this.status >= 200 && this.status < 300) {
-                          alert("OK");
-                        }
-                        else {
-                          alert("problem");
-                        }
-                      }
-                    };
-                    $( this ).dialog( "close" ); },
-                  Zurück: function() { $( this ).dialog( "close" ); }
+                    alert("about sending form");
+                    sendPersonForm();
+                    $( this ).dialog( "close" ); 
+                  },
+                  Zurück: function() { 
+                    $( this ).dialog( "close" ); 
+                  }
                 }
               });
 

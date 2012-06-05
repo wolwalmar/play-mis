@@ -13,11 +13,11 @@
 			<div class="span-2"><label>Titel:</label></div>
 			<div class="span-2">@membershipPerson._2.title</div><br />
 			<div class="span-2"><label>Vorname:</label></div>
-			<div class="span-2">@membershipPerson._2.firstname</div><br />
+			<div class="span-3"><span id="firstname">@membershipPerson._2.firstname</span></div><br />
 			<div class="span-2"><label>Zuname:</label></div>
-			<div class="span-2">@membershipPerson._2.lastname</div><br />
+			<div class="span-3"><span id="lastname">@membershipPerson._2.lastname</span></div><br />
 			<div class="span-2"><label>Geburtstag:</label></div>
-			<div class="span-2">@membershipPerson._2.birthday</div><br />
+			<div class="span-3">@membershipPerson._2.birthday</div><br />
 
 			<div class="span-2"><button id="change-person">Ändern</button></div>
 		</fieldset>
@@ -124,10 +124,14 @@
   <fieldset>
     <label for="salutation_input">Anrede</label>
     <input type="text" name="salutation" id="salutation-input" class="text ui-widget-content ui-corner-all" value="@membershipPerson._2.salutation"/>
+    <label for="title_input">Titel</label>
+    <input type="text" name="title_input" id="title_input" class="text ui-widget-content ui-corner-all" value="@membershipPerson._2.title"/>
     <label for="firstname_input">Vorname</label>
     <input type="text" name="firstname" id="firstname_input" value="@membershipPerson._2.firstname" class="text ui-widget-content ui-corner-all" />
     <label for="lastname_input">Zuname</label>
     <input type="text" name="lastname" id="lastname_input" value="@membershipPerson._2.lastname" class="text ui-widget-content ui-corner-all" />
+    <label for="birthday_input">Geburtstag</label>
+    <input type="text" name="birthday_input" id="birthday_input" value="@membershipPerson._2.birthday" class="text ui-widget-content ui-corner-all" />
   </fieldset>
   </form>
 </div>
