@@ -28,8 +28,9 @@ object Memberships extends Controller {
           "city" -> text,
           "begin_rsv" -> date,
           "end_rsv" -> date,
-          "contrib_rsv" -> number,
-          "withLPI" -> boolean
+          "contrib_rsv" -> text,
+          "withLPI" -> boolean,
+          "withadmissionfee" -> boolean
       	) 
 		(NewMembership.apply)(NewMembership.unapply)
 	)
@@ -53,6 +54,7 @@ object Memberships extends Controller {
 	def edit(id: Long) = TODO
 
 	def update(id: Long) = TODO
+  def updatePerson(id: Long) = TODO
 
 	  /**
    * Handle form submission.
@@ -77,10 +79,17 @@ object Memberships extends Controller {
                             newmembership.lastname,
                             newmembership.birthday,
                             ms_ref))
-        val rsv_ref = LegalProtectionInsurance.insert( new LegalProtectionInsurance(0,
-                            newmembership.begin_rsv,
-                            newmembership.end_rsv,
-                            newmembership.contrib_rsv))
+
+        val rsv_ref = if( newmembership.withLPI) {
+            println("mit RSV")
+            LegalProtectionInsurance.insert( new LegalProtectionInsurance(0,
+                              newmembership.begin_rsv,
+                              newmembership.end_rsv,
+                              newmembership.contrib_rsv.toInt))
+          }
+          else 0
+        
+        println("ref "+rsv_ref)
         Address.insert(new Address(0,
                             newmembership.street,
                             newmembership.number,
@@ -89,6 +98,9 @@ object Memberships extends Controller {
                             ms_ref,
                             if( newmembership.withLPI ) Some(rsv_ref) else None))
         Account.insert(new Account(0,"Beitrag",new java.util.Date,new java.math.BigDecimal("-63.90"),ms_ref))
+        if( newmembership.withadmissionfee ) 
+          Account.insert(
+            new Account(0,"Aufnahmegebühr",new java.util.Date,new java.math.BigDecimal("-15.00"),ms_ref))
         Ok(views.html.index(""))
       }
     )

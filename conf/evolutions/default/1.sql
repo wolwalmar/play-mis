@@ -22,7 +22,7 @@ create table person (
 );
 
 create table rsv (
-	id long Identity primary key,
+	id long primary key,
 	begin_rsv date not null,
 	end_rsv date,
 	contrib integer

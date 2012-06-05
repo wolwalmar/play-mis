@@ -12,5 +12,6 @@ GET		/membership/:id/edit		controllers.Memberships.edit(id: Long)
 PUT		/membership/:id			controllers.Memberships.update(id: Long)
 POST	/memberships    		controllers.Memberships.submit
 	
+PUT		/person/:id 			controllers.Memberships.updatePerson(id: Long)
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

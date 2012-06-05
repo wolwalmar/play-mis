@@ -17,5 +17,6 @@ case class NewMembership(
 		city: String,
 		begin_rsv: java.util.Date,
 		end_rsv: java.util.Date,
-		contrib_rsv: Int,
-		withLPI: Boolean);
+		contrib_rsv: String,
+		withLPI: Boolean,
+		withadmissionfee: Boolean );

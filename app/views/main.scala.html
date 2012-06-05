@@ -9,32 +9,91 @@
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
         <link rel="stylesheet" href=@routes.Assets.at("stylesheets/libs/blueprint/screen.css") type="text/css" media="screen, projection" />
         <link rel="stylesheet" href=@routes.Assets.at("stylesheets/libs/blueprint/print.css") type="text/css" media="print" />
-        <!--[if IE]><link rel="stylesheet" href="blueprint/ie.css" type="text/css" media="screen, projection" /><![endif]-->
+        <link rel="stylesheet" href=@routes.Assets.at("stylesheets/libs/ui-lightness/jquery-ui-1.8.20.custom.css") type="text/css" />
 
-        <script src="@routes.Assets.at("javascripts/jquery.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/jquery.dataTables.js")" type="text/javascript" language="javascript" ></script>
-        <script src="@routes.Assets.at("javascripts/jquery-ui-1.8.20.custom.min.js")" type="text/javascript" language="javascript" ></script>
+        <!--[if IE]><link rel="stylesheet" href="blueprint/ie.css" type="text/css" media="screen, projection" /><![endif]-->
+        <script src=@routes.Assets.at("javascripts/jquery.js") type="text/javascript"></script>
+        <script src=@routes.Assets.at("javascripts/jquery.dataTables.js") type="text/javascript" language="javascript" ></script>
+        <script src=@routes.Assets.at("javascripts/jquery-ui-1.8.20.custom.min.js") type="text/javascript" language="javascript" ></script>
 
         <script type="text/javascript" charset="utf-8">
             $(document).ready(function() {
-            $('#accounts').dataTable({
-              "bLengthChange": false,
-              "bFilter": false,
-              "bPaginate": false,
-              "bScrollCollapse": false,
-              "sScrollY": "100px"
+              $('#accounts').dataTable({
+                "bLengthChange": false,
+                "bFilter": false,
+                "bPaginate": false,
+                "bScrollCollapse": false,
+                "sScrollY": "100px"
+              });
+            $(function() {
+              $( "#change-person-dialog" ).dialog({
+                autoOpen: false,
+                height: 300,
+                width: 350,
+                modal: true,
+                buttons: {
+                  OK: function() {  
+                    var xhr;
+                    xhr = new XMLHttpRequest();
+                    xhr.open("PUT","/person/1" );
+                    xhr.sent("name=Wolf");
+                    xhr.onreadystatechange = function() {
+                      if (this.readyState == 4) {
+                        if (this.status >= 200 && this.status < 300) {
+                          alert("OK");
+                        }
+                        else {
+                          alert("problem");
+                        }
+                      }
+                    };
+                    $( this ).dialog( "close" ); },
+                  Zurück: function() { $( this ).dialog( "close" ); }
+                }
+              });
+
+              $("#change-person")
+                .button()
+                .click(
+                  function() {
+                    $('#change-person-dialog').dialog("open");
+                  });
+
+              $( "#change-address-dialog" ).dialog({
+                autoOpen: false,
+                height: 300,
+                width: 350,
+                modal: true,
+                buttons: {
+                  OK: function() {  
+                    var xhr;
+                    xhr = new XMLHttpRequest();
+                    xhr.open("PUT","/address/1" );
+                    xhr.sent("name=Wolf");
+                    xhr.onreadystatechange = function() {
+                      if (this.readyState == 4) {
+                        if (this.status >= 200 && this.status < 300) {
+                          alert("OK");
+                        }
+                        else {
+                          alert("problem");
+                        }
+                      }
+                    };
+                    $( this ).dialog( "close" ); },
+                  Zurück: function() { $( this ).dialog( "close" ); }
+                }
+              });
+
+              $("#change-address")
+                .button()
+                .click(
+                  function() {
+                    $('#change-address-dialog').dialog("open");
+                  });
             });
-        } );
-
-        $( "#create-user" )
-          .button()
-          .click(function() {
-            $( "#dialog-form" ).dialog( "open" );
-        });
-
-
-    </script>
-
+          });
+        </script>
         <style type="text/css">#tdright { align:"right" } </style>
     </head>
     <body>
@@ -52,19 +111,5 @@
           </div>
       </div>
 
-<!--div id="dialog-form" title="Create new user">
-  <p class="validateTips">All form fields are required.</p>
-
-  <form>
-  <fieldset>
-    <label for="name">Name</label>
-    <input type="text" name="name" id="name" class="text ui-widget-content ui-corner-all" />
-    <label for="email">Email</label>
-    <input type="text" name="email" id="email" value="" class="text ui-widget-content ui-corner-all" />
-    <label for="password">Password</label>
-    <input type="password" name="password" id="password" value="" class="text ui-widget-content ui-corner-all" />
-  </fieldset>
-  </form -->
-</div>
     </body>
 </html>

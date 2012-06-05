@@ -44,8 +44,8 @@ object LegalProtectionInsurance {
 			val next = nextSeqNum
 			SQL("""insert into
 						rsv
-					(begin_rsv, end_rsv, contrib) values
-					({begin_rsv},{end_rsv},{contrib})
+					(id,begin_rsv, end_rsv, contrib) values
+					({id},{begin_rsv},{end_rsv},{contrib})
 				""").on(
 					"id" -> next,
 					"begin_rsv" -> a.begin_rsv,

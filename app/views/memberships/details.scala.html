@@ -17,9 +17,9 @@
 			<div class="span-2"><label>Zuname:</label></div>
 			<div class="span-2">@membershipPerson._2.lastname</div><br />
 			<div class="span-2"><label>Geburtstag:</label></div>
-			<div class="span-2">@membershipPerson._2.birthday</div> <br />
+			<div class="span-2">@membershipPerson._2.birthday</div><br />
 
-			<div class="span-2"><button id="create-user">Ändern</button></div>
+			<div class="span-2"><button id="change-person">Ändern</button></div>
 		</fieldset>
 	</div>
 
@@ -39,20 +39,32 @@
 			<div class="span-1"><label>bis:</label></div>
 			<div class="span-2">@(membershipPerson._5 match {
 				case Some(lpi) => lpi.end_rsv
-				case None => "" })</div>
+				case None => "" })</div><br />
+			<div class="span-2"><button id="change-address">Ändern</button></div>
 		</fieldset>
 	</div>
 
-
-	<div class="span-24 last">
+	<div class="span-12">
 		<fieldset>
 			<legend>Mitgliedschaft</legend>
 			<div class="span-2"><label>Eintritt:</label></div>
 			<div class="span-2">@membershipPerson._1.begin_ms</div>
-			<div class="span-2"><label>Austritt:</label></div>
-			<div class="span-4">@membershipPerson._1.end_ms</div>
+			<div class="span-2"><label>Austritt:</label></div> 
+			<div class="span-2">@membershipPerson._1.end_ms</div> <br />
 			<div class="span-2"><label>Beitr.Grp.:</label></div>
 			<div class="span-2">@membershipPerson._1.contrib</div>
+		</fieldset>
+	</div>
+
+	<div class="span-12 last">
+		<fieldset>
+			<legend>Kontaktdaten</legend>
+			<div class="span-3"><label>Telefon privat:</label></div>
+			<div class="span-3">030 123 2345</div> <br />
+			<div class="span-3"><label>Telefon dienstl.:</label></div>
+			<div class="span-3">030 221 4432</div> <br />
+			<div class="span-3"><label>Mobil:</label></div>
+			<div class="span-3">0171 223 3212</div>
 		</fieldset>
 	</div>
 
@@ -104,4 +116,37 @@
 		<a href="@routes.Memberships.list()">Zurück</a>
 	</div>
 	<div class="span-14 last" />
+
+<div id="change-person-dialog" title="Personendaten ändern">
+  <!-- p class="validateTips">All form fields are required.</p -->
+
+  <form>
+  <fieldset>
+    <label for="salutation_input">Anrede</label>
+    <input type="text" name="salutation" id="salutation-input" class="text ui-widget-content ui-corner-all" value="@membershipPerson._2.salutation"/>
+    <label for="firstname_input">Vorname</label>
+    <input type="text" name="firstname" id="firstname_input" value="@membershipPerson._2.firstname" class="text ui-widget-content ui-corner-all" />
+    <label for="lastname_input">Zuname</label>
+    <input type="text" name="lastname" id="lastname_input" value="@membershipPerson._2.lastname" class="text ui-widget-content ui-corner-all" />
+  </fieldset>
+  </form>
+</div>
+
+<div id="change-address-dialog" title="Adresse ändern">
+  <p class="validateTips">All form fields are required.</p>
+
+  <form>
+  <fieldset>
+    <label for="street_input">Straße</label>
+    <input type="text" name="street" id="street_input" class="text ui-widget-content ui-corner-all" value="@membershipPerson._3.street"/>
+    <label for="number_input">Hausnummer</label>
+    <input type="text" name="number_input" id="number_input" value="@membershipPerson._3.number" class="text ui-widget-content ui-corner-all" />
+    <label for="zip_input">PLZ</label>
+    <input type="text" name="zip_input" id="zip_input" value="@membershipPerson._3.zip" class="text ui-widget-content ui-corner-all" />
+    <label for="city_input">Ort</label>
+    <input type="text" name="city_input" id="city_input" value="@membershipPerson._3.city" class="text ui-widget-content ui-corner-all" />
+  </fieldset>
+  </form>
+</div>
+
 }

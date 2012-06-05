@@ -30,7 +30,7 @@ object Address {
 		DB.withConnection {
 			implicit connection => {
 			val sql = a.rsv_ref match {
-				case Some(ref) => SQL("""insert into
+				case Some(ref) => { println("ref "+ref); SQL("""insert into
 											address
 										(street,number,zip,city,ms_ref,rsv_ref) values
 										({street},{number},{zip},{city},{ms_ref},{rsv_ref})
@@ -40,10 +40,10 @@ object Address {
 										"zip" -> a.zip,
 										"city" -> a.city,
 										"ms_ref" -> a.ms_ref,
-										"rsv_ref" -> ref)
+										"rsv_ref" -> a.rsv_ref.get)}
 				case None => SQL("""insert into
 											address
-										(street,number,zip,city) values
+										(street,number,zip,city,ms_ref) values
 										({street},{number},{zip},{city},{ms_ref})
 									""").on(
 										"street" -> a.street,
