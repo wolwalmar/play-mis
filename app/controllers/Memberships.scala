@@ -4,13 +4,14 @@ import play.api._
 import play.api.mvc._
 import play.api.data._
 import play.api.data.Forms._
+import play.api.libs.json._
 
 import views._
 import models.memberships._
 import models.persons._
 import models.finance._
 
-case class Change(salutation: String, firstname: String, lastname: String)
+case class Change(salutation: String, title: String, firstname: String, lastname: String)
 
 object Memberships extends Controller {
 	val newMembershipForm: Form[NewMembership] = Form(
@@ -39,9 +40,10 @@ object Memberships extends Controller {
 
   val changeForm: Form[Change] = Form(
     mapping(
-          "salutation_input" -> text,
-          "firstname_input" -> text,
-          "lastname_input" -> text
+          "salutation" -> text,
+          "title" -> text,
+          "firstname" -> text,
+          "lastname" -> text
         ) 
     (Change.apply)(Change.unapply)
   )
@@ -71,8 +73,17 @@ object Memberships extends Controller {
     changeForm.bindFromRequest.fold(
       errors => { println("error"); Ok("error") },
       changes => {
-          println(changes.firstname);
-          Ok(<person><firstname>{changes.firstname}</firstname><lastname>{changes.lastname}</lastname></person>) })
+          println(changes);
+          /*Ok(<person><firstname>{changes.firstname}</firstname><lastname>{changes.lastname}</lastname></person>)*/ 
+
+          Ok(Json.toJson(
+              Map(
+                "salutation"->Json.toJson(changes.salutation),
+                "title"->Json.toJson(changes.title),
+                "firstname"->Json.toJson(changes.firstname),
+                "lastname"->Json.toJson(changes.lastname)
+              )))
+          })
   }
 
   def changePerson_(id: Long) = Action { implicit request =>
