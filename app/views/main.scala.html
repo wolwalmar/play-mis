@@ -17,95 +17,57 @@
         <script src=@routes.Assets.at("javascripts/jquery-ui-1.8.20.custom.min.js") type="text/javascript" language="javascript" ></script>
 
         <script type="text/javascript" charset="utf-8">
-            $(document).ready(function() {
-              $('#accounts').dataTable({
-                "bLengthChange": false,
-                "bFilter": false,
-                "bPaginate": false,
-                "bScrollCollapse": false,
-                "sScrollY": "100px"
-              });
-
-            function sendPersonForm() {
-              var xmlhttp;
-              if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
-                alert('getting XMLHttpRequest');
-                xmlhttp=new XMLHttpRequest();
-              } else {// code for IE6, IE5
-                xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-              }
-              xmlhttp.onreadystatechange=function() {
-                if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-                  alert("finished");
-                  document.getElementById("firstname").innerHTML = xmlhttp.responseXML.documentElement.getElementsByTagName("firstname")[0].childNodes[0].nodeValue;
-                  document.getElementById("lastname").innerHTML = xmlhttp.responseXML.documentElement.getElementsByTagName("lastname")[0].childNodes[0].nodeValue;
-
-                }
-              }
-              xmlhttp.open("POST","/changeperson/1",true);
-              xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-              xmlhttp.send("salutation_input=Frau&firstname_input=Rosa&lastname_input=Ford");
-            }
+            $(document).ready(
+              function() {
+                $('#accounts').dataTable({
+                  "bLengthChange": false,
+                  "bFilter": false,
+                  "bPaginate": false,
+                  "bScrollCollapse": false,
+                  "sScrollY": "100px"
+                });
+            });
 
             $(function() {
-              $( "#change-person-dialog" ).dialog({
-                autoOpen: false,
-                height: 300,
-                width: 350,
-                modal: true,
-                buttons: {
-                  OK: function() {  
-                    alert("about sending form");
-                    sendPersonForm();
-                    $( this ).dialog( "close" ); 
-                  },
-                  Zurück: function() { 
-                    $( this ).dialog( "close" ); 
+                $( "#change-person-dialog" ).dialog({
+                  autoOpen: false,
+                  height: 300,
+                  width: 350,
+                  modal: true,
+                  buttons: {
+                    OK: function() {  
+                      sendPersonForm();
+                      $( this ).dialog( "close" ); 
+                    },
+                    Zurück: function() { 
+                      $( this ).dialog( "close" ); 
+                    }
                   }
-                }
-              });
+                });
+                $("#change-person")
+                  .button()
+                  .click(
+                    function() {
+                      $('#change-person-dialog').dialog("open");
+                    });
 
-              $("#change-person")
-                .button()
-                .click(
-                  function() {
-                    $('#change-person-dialog').dialog("open");
+                function sendPersonForm() {
+                  var dataString = "salutation="+$("#salutation_input").val()+"&title="+$("#title_input").val()+"&firstname="+ $("#firstname_input").val()+ "&lastname="+$("#lastname_input").val()
+                  $.ajax( {
+                    type: "POST",
+                    url: "/changeperson/1",
+                    data: dataString,
+                    dataType: "json",
+                    success: function(result) {
+                        $("#salutation").html(result.salutation);
+                        $("#title").html(result.title);
+                        $("#firstname").html(result.firstname);
+                        $("#lastname").html(result.lastname);
+                    }
                   });
-
-              $( "#change-address-dialog" ).dialog({
-                autoOpen: false,
-                height: 300,
-                width: 350,
-                modal: true,
-                buttons: {
-                  OK: function() {  
-                    var xhr;
-                    xhr = new XMLHttpRequest();
-                    xhr.open("PUT","/address/1" );
-                    xhr.sent("name=Wolf");
-                    xhr.onreadystatechange = function() {
-                      if (this.readyState == 4) {
-                        if (this.status >= 200 && this.status < 300) {
-                          alert("OK");
-                        }
-                        else {
-                          alert("problem");
-                        }
-                      }
-                    };
-                    $( this ).dialog( "close" ); },
-                  Zurück: function() { $( this ).dialog( "close" ); }
                 }
-              });
-
-              $("#change-address")
-                .button()
-                .click(
-                  function() {
-                    $('#change-address-dialog').dialog("open");
-                  });
-            });
-          });
+              } 
+            );
         </script>
         <style type="text/css">#tdright { align:"right" } </style>
     </head>
