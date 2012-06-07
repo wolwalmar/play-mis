@@ -75,6 +75,11 @@ object Memberships extends Controller {
           Ok(<person><firstname>{changes.firstname}</firstname><lastname>{changes.lastname}</lastname></person>) })
   }
 
+  def changePerson_(id: Long) = Action { implicit request =>
+    println("hello")
+    Ok("hello")
+  }
+
 	  /**
    * Handle form submission.
    */

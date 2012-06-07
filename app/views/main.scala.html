@@ -27,6 +27,24 @@
               });
 
             function sendPersonForm() {
+              alert('sendPersonForm');
+              $.ajax({ 
+                url: "/changeperson/1",
+                type: "POST",
+                data: {salutation_input: 'Frau', firstname_input: 'Rosa', lastname_input: 'Lux'},
+                datatype: 'xml',
+                beforeSend: function(x) {
+                  if (x && x.overrideMimeType) {
+                    x.overrideMimeType("application/j-son;charset=UTF-8");
+                  }
+                },
+                success: function(result) {
+                  alert(result);
+                  result.getElementById("firstname").innerHTML = result.documentElement.getElementsByTagName("firstname")[0].childNodes[0].nodeValue;
+                }
+              });
+
+/*
               var xmlhttp;
               if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
                 alert('getting XMLHttpRequest');
@@ -45,6 +63,7 @@
               xmlhttp.open("POST","/changeperson/1",true);
               xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
               xmlhttp.send("salutation_input=Frau&firstname_input=Rosa&lastname_input=Ford");
+*/  
             }
 
             $(function() {
