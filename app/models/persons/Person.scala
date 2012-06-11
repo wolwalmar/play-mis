@@ -26,6 +26,12 @@ object Person {
 		}
 	}
 
+	def findByMsRef(ms_ref: Long): Person = DB.withConnection {
+		implicit connection => 
+		val sql = SQL("select * from person where ms_ref={ms_ref}").on("ms_ref" -> ms_ref)
+		sql.as(personParser *).head
+	}
+
 	def insert(p: Person): Boolean = {
 		DB.withConnection {
 			implicit connection =>
@@ -44,5 +50,25 @@ object Person {
 		}
 	}
 
-
+	def update(p: Person): Boolean = 
+		DB.withConnection {
+			implicit connection =>
+			SQL("""update
+						person
+					set 
+						salutation={salutation},
+						title={title},
+						firstname={firstname},
+						lastname={lastname},
+						birthday={birthday} 
+					where
+						id={id}""")
+			.on(		
+				"salutation" -> p.salutation,
+				"title" -> p.title,
+				"firstname" -> p.firstname,
+				"lastname" -> p.lastname,
+				"birthday" -> p.birthday,
+				"id" -> p.id).executeUpdate == 1
+		}
 }

@@ -26,6 +26,12 @@ object Address {
 		}
 	}
 
+	def findByMsRef(ms_ref: Long): Address = DB.withConnection {
+		implicit connection => 
+		val sql = SQL("select * from address where ms_ref={ms_ref}").on("ms_ref" -> ms_ref)
+		sql.as(addressParser *).head
+	}
+
 	def insert(a: Address): Boolean = {
 		DB.withConnection {
 			implicit connection => {
@@ -54,6 +60,26 @@ object Address {
 				} 
 				sql.executeUpdate() == 1
 			}
+		}
+	}
+	def update(a: Address): Boolean = {
+		DB.withConnection {
+			implicit connection =>
+			SQL("""update
+						address
+					set 
+						street={street},
+						number={number},
+						zip={zip},
+						city={city}
+					where
+						id={id}""")
+			.on(		
+				"street" -> a.street,
+				"number" -> a.number,
+				"zip" -> a.zip,
+				"city" -> a.city,
+				"id" -> a.id).executeUpdate == 1
 		}
 	}
 }

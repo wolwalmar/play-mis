@@ -5,7 +5,7 @@
 <html>
     <head>
         <title>@title</title>
-        <!--link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")"-->
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
         <link rel="stylesheet" href=@routes.Assets.at("stylesheets/libs/blueprint/screen.css") type="text/css" media="screen, projection" />
         <link rel="stylesheet" href=@routes.Assets.at("stylesheets/libs/blueprint/print.css") type="text/css" media="print" />
@@ -21,8 +21,8 @@
             $(function() {
                 $( "#change-person-dialog" ).dialog({
                   autoOpen: false,
-                  height: 300,
-                  width: 350,
+                  height: 480,
+                  width: 390,
                   modal: true,
                   buttons: {
                     OK: function() {  
@@ -41,11 +41,35 @@
                       $('#change-person-dialog').dialog("open");
                     });
 
+                $("#change-address")
+                  .button()
+                  .click(
+                    function() {
+                      $('#change-address-dialog').dialog("open");
+                    });
+
+                $( "#change-address-dialog" ).dialog({
+                  autoOpen: false,
+                  height: 300,
+                  width: 350,
+                  modal: true,
+                  buttons: {
+                    OK: function() {  
+                      sendAddressForm();
+                      $( this ).dialog( "close" ); 
+                    },
+                    Zurück: function() { 
+                      $( this ).dialog( "close" ); 
+                    }
+                  }
+                });
+
                 function sendPersonForm() {
-                  var dataString = "salutation="+$("#salutation_input").val()+"&title="+$("#title_input").val()+"&firstname="+ $("#firstname_input").val()+ "&lastname="+$("#lastname_input").val()
+                  var dataString = "salutation="+$("#salutation_input").val()+"&title="+$("#title_input").val()+"&firstname="+ $("#firstname_input").val()+ "&lastname="+$("#lastname_input").val()+"&birthday="+$("#birthday_input").val();
+                  var dest = "/changeperson/" + $("#membershipid").html();
                   $.ajax( {
                     type: "POST",
-                    url: "/changeperson/1",
+                    url: dest,
                     data: dataString,
                     dataType: "json",
                     success: function(result) {
@@ -53,6 +77,23 @@
                         $("#title").html(result.title);
                         $("#firstname").html(result.firstname);
                         $("#lastname").html(result.lastname);
+                        $("#birthday").html(result.birthday);
+                    }
+                  });
+                }
+                function sendAddressForm() {
+                  var dataString = "street="+$("#street_input").val()+"&number="+$("#number_input").val()+"&zip="+ $("#zip_input").val()+ "&city="+$("#city_input").val();
+                  var dest = "/changeaddress/" + $("#membershipid").html();
+                  $.ajax( {
+                    type: "POST",
+                    url: dest,
+                    data: dataString,
+                    dataType: "json",
+                    success: function(result) {
+                        $("#street").html(result.street);
+                        $("#number").html(result.number);
+                        $("#zip").html(result.zip);
+                        $("#city").html(result.city);
                     }
                   });
                 }
@@ -72,6 +113,7 @@
           </div>
  
           <div id="footer" class="span-24 last">
+            <form><input type="button" value=" Drucken " onclick="window.print();return false;" /></form> 
               <p>Lorem Ipsum</p>
           </div>
       </div>

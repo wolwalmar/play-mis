@@ -11,7 +11,9 @@ import models.memberships._
 import models.persons._
 import models.finance._
 
-case class Change(salutation: String, title: String, firstname: String, lastname: String)
+case class ChangePerson(salutation: String, title: String, firstname: String, lastname: String, birthday: java.util.Date)
+
+case class ChangeAddress(street: String, number: String, zip: String, city: String)
 
 object Memberships extends Controller {
 	val newMembershipForm: Form[NewMembership] = Form(
@@ -38,14 +40,25 @@ object Memberships extends Controller {
 		(NewMembership.apply)(NewMembership.unapply)
 	)
 
-  val changeForm: Form[Change] = Form(
+  val changePersonForm: Form[ChangePerson] = Form(
     mapping(
           "salutation" -> text,
           "title" -> text,
           "firstname" -> text,
-          "lastname" -> text
+          "lastname" -> text,
+          "birthday" -> date
         ) 
-    (Change.apply)(Change.unapply)
+    (ChangePerson.apply)(ChangePerson.unapply)
+  )
+
+  val changeAddressForm: Form[ChangeAddress] = Form(
+    mapping(
+          "street" -> text,
+          "number" -> text,
+          "zip" -> text,
+          "city" -> text
+        ) 
+    (ChangeAddress.apply)(ChangeAddress.unapply)
   )
 
 	/**
@@ -69,29 +82,61 @@ object Memberships extends Controller {
 
 	def update(id: Long) = TODO
 
-  def changePerson(id: Long) = Action { implicit request =>
-    changeForm.bindFromRequest.fold(
-      errors => { println("error"); Ok("error") },
+  def changePerson(membershipId: Long) = Action { implicit request =>
+    changePersonForm.bindFromRequest.fold(
+      errors => { println("error"); BadRequest("error") },
       changes => {
-          println(changes);
-          /*Ok(<person><firstname>{changes.firstname}</firstname><lastname>{changes.lastname}</lastname></person>)*/ 
-
+          println(membershipId)
+          val ms = Membership.findByMembershipId(membershipId)
+          val person = Person.findByMsRef(ms.id)
+          Person.update(
+            new Person(
+              person.id, 
+              changes.salutation,
+              changes.title,
+              changes.firstname,
+              changes.lastname,
+              changes.birthday,
+              ms.membershipId))
+          val df = new java.text.SimpleDateFormat("yyyy-MM-dd")
           Ok(Json.toJson(
               Map(
                 "salutation"->Json.toJson(changes.salutation),
                 "title"->Json.toJson(changes.title),
                 "firstname"->Json.toJson(changes.firstname),
-                "lastname"->Json.toJson(changes.lastname)
+                "lastname"->Json.toJson(changes.lastname),
+                "birthday"->Json.toJson(df.format(changes.birthday))
               )))
           })
   }
 
-  def changePerson_(id: Long) = Action { implicit request =>
-    println("hello")
-    Ok("hello")
+  def changeAddress(membershipId: Long) = Action { implicit request =>
+    changeAddressForm.bindFromRequest.fold(
+      errors => { println("error"); BadRequest("error") },
+      changes => {
+          println(membershipId)
+          val ms = Membership.findByMembershipId(membershipId)
+          val address = Address.findByMsRef(ms.id)
+          Address.update(
+            new Address(
+              address.id, 
+              changes.street,
+              changes.number,
+              changes.zip,
+              changes.city,
+              ms.membershipId,
+              address.rsv_ref))
+          val df = new java.text.SimpleDateFormat("yyyy-MM-dd")
+          Ok(Json.toJson(
+              Map(
+                "street"->Json.toJson(changes.street),
+                "number"->Json.toJson(changes.number),
+                "zip"->Json.toJson(changes.zip),
+                "city"->Json.toJson(changes.city)
+              )))
+          })
   }
-
-	  /**
+	 /**
    * Handle form submission.
    */
   def submit = Action { implicit request =>
