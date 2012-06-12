@@ -1,7 +1,7 @@
 @(memberships: Seq[(models.memberships.Membership,models.persons.Person)])
 
 @main("Welcome to Play 2.0") {
-	<h1>Memberships</h1>
+	<!-- h1>Memberships</h1>
 	<ul>
 	@for(membership <- memberships) {
 		<li>
@@ -12,6 +12,72 @@
 			<a href="@controllers.routes.Memberships.details(membership._1.id)">details</a>
 		</li>
 	}
-	</ul>
-	<a href="@controllers.routes.Memberships.form">add</a>
+	</ul -->
+
+	<div class="span-18">
+		<fieldset>
+			<legend>Mitgliederbestand</legend>
+
+		    <table id="memberpool" summary="This is the summary text for this table."  border="0" cellspacing="0" cellpadding="0">
+		    	<caption><em>Mitgliedschaften im Verein</em></caption>
+		        <thead>
+		        	<tr>
+		            	<th class="span-2"><div align="right">Mitglied-Nr.</div></th>
+		            	<th class="span-4">Zuname</th>
+		            	<th class="span-4">Vorname</th>
+		              	<th class="span-2" ><div align="right">Eintritt</div></th>
+		            	<th class="span-3 last">Aktion</th>
+
+		            </tr>
+		        </thead>
+		        <tfoot>
+		        	<tr>
+		            </tr>
+		        </tfoot>
+		        <tbody>
+					@for(membership <- memberships) {
+			            <tr>
+		    	          <td><div align="right">@membership._1.membershipId</div></td>
+		        	      <td>@membership._2.lastname</td>
+		        	      <td>@membership._2.firstname</td>
+		            	  <td><div align="right">@membership._1.begin_ms</div></td>
+						  <td><a href="@controllers.routes.Memberships.details(membership._1.id)">Details</a></td>
+		            	</tr>
+		            }
+		         </tbody>
+		    </table>
+		</fieldset>
+	</div>
+
+	<div class="span-2 last"><a href="@controllers.routes.Memberships.form">add</a></div>
+	<div class="span-3 last"><button id="upload-rsv-file">RSV/MZ-Datei</button></div>
+
+	<div id="upload-rsv-file-dialog" title="RSV/Zeitungsmelde-Datei">
+		<img id="loading" src="/public/images/loading.gif" style="display:none;">
+		<form name="form" action="" method="POST" enctype="multipart/form-data">
+			<table cellpadding="0" cellspacing="0" class="tableForm">
+				<thead>
+					<tr>
+						<th>Ajax File Upload</th>
+					</tr>
+				</thead>
+				<tbody>	
+					<tr>
+						<td><input id="fileToUpload" type="file" size="45" name="fileToUpload" class="input"></td>		
+					</tr>
+					<tr>
+						<td>Please select a file and click Upload button</td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<!-- td><button class="button" id="buttonUpload" onclick="return ajaxFileUpload();">Upload</button></td -->
+					</tr>
+				</tfoot>
+			</table>
+		</form>
+
+    </div>
+    
+
 }

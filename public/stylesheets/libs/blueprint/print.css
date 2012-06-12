@@ -10,7 +10,7 @@
    * This is a compressed file. See the sources in the 'src' directory.
 
 ----------------------------------------------------------------------- */
-.print {visibility:visible;} 
+.print {visibility:visible;}
 /* print.css */
 body {visibility:hidden;line-height:1.5;font-family:"Helvetica Neue", Arial, Helvetica, sans-serif;color:#000;background:none;font-size:10pt;}
 .container {background:none;}

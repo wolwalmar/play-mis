@@ -3,16 +3,20 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
-
-GET     /newmembership              controllers.Memberships.form
-GET     /memberships                    controllers.Memberships.list(page: Int ?= 1)
+GET     /                       controllers.Application.index
+GET     /newmembership          controllers.Memberships.form
+GET     /memberships            controllers.Memberships.list(page: Int ?= 1)
 GET		/membership/:id			controllers.Memberships.details(id: Long)
-GET		/membership/:id/edit		controllers.Memberships.edit(id: Long)
+GET		/membership/:id/edit	controllers.Memberships.edit(id: Long)
 PUT		/membership/:id			controllers.Memberships.update(id: Long)
 POST	/memberships    		controllers.Memberships.submit
 	
 POST	/changeperson/:id 		controllers.Memberships.changePerson(id: Long)
 POST	/changeaddress/:id 		controllers.Memberships.changeAddress(id: Long)
+POST	/changemembership/:id	controllers.Memberships.changeMembership(id: Long)
+
+POST	/uploadrsv				controllers.Memberships.douploadrsv
+
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
+GET     /assets/*file           controllers.Assets.at(path="/public", file)
+

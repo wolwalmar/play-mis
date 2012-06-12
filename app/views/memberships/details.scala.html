@@ -13,12 +13,11 @@
 			<div class="span-2"><label>Titel:</label></div>
 			<div class="span-2"><span id="title">@membershipPerson._2.title</span></div><br />
 			<div class="span-2"><label>Vorname:</label></div>
-			<div class="span-3 print"><span id="firstname">@membershipPerson._2.firstname</span></div><br />
+			<div class="span-4 print"><span id="firstname">@membershipPerson._2.firstname</span></div><br />
 			<div class="span-2"><label>Zuname:</label></div>
-			<div class="span-3"><span id="lastname">@membershipPerson._2.lastname</span></div><br />
+			<div class="span-4"><span id="lastname">@membershipPerson._2.lastname</span></div><br />
 			<div class="span-2"><label>Geburtstag:</label></div>
-			<div class="span-3"><span id="birthday">@membershipPerson._2.birthday</span></div><br />
-
+			<div class="span-2"><span id="birthday">@membershipPerson._2.birthday</span></div><br /><br />
 			<div class="span-2"><button id="change-person">Ändern</button></div>
 		</fieldset>
 	</div>
@@ -39,20 +38,20 @@
 			<div class="span-1"><label>bis:</label></div>
 			<div class="span-2">@(membershipPerson._5 match {
 				case Some(lpi) => lpi.end_rsv
-				case None => "" })</div><br />
+				case None => "" })</div><br /><br />
 			<div class="span-2"><button id="change-address">Ändern</button></div>
 		</fieldset>
 	</div>
 
 	<div class="span-12">
 		<fieldset>
-			<legend>Mitgliedschaft</legend>
+			<legend><a id="change-membership">Mitgliedschaft</a></legend>
 			<div class="span-2"><label>Eintritt:</label></div>
-			<div class="span-2">@membershipPerson._1.begin_ms</div>
+			<div class="span-2"><span id="begin_ms">@membershipPerson._1.begin_ms</span></div>
 			<div class="span-2"><label>Austritt:</label></div> 
-			<div class="span-2">@membershipPerson._1.end_ms</div> <br />
+			<div class="span-2" id="end_ms">@membershipPerson._1.end_ms</div> <br />
 			<div class="span-2"><label>Beitr.Grp.:</label></div>
-			<div class="span-2">@membershipPerson._1.contrib</div>
+			<div class="span-2" id="contrib">@membershipPerson._1.contrib</div><br /><br />
 		</fieldset>
 	</div>
 
@@ -149,6 +148,21 @@
     <input type="text" name="zip_input" id="zip_input" value="@membershipPerson._3.zip" class="text ui-widget-content ui-corner-all" />
     <label for="city_input">Ort</label>
     <input type="text" name="city_input" id="city_input" value="@membershipPerson._3.city" class="text ui-widget-content ui-corner-all" />
+  </fieldset>
+  </form>
+</div>
+
+<div id="change-membership-dialog" title="Mitgliedschaft ändern">
+  <p class="validateTips">All form fields are required.</p>
+
+  <form>
+  <fieldset>
+    <label for="begin_ms_input">Eintrittsdatum</label><br />
+    <input type="text" name="begin_ms_input" id="begin_ms_input" class="date ui-widget-content ui-corner-all" value="@membershipPerson._1.begin_ms"/><br />
+    <label for="end_ms_input">Austrittsdatum</label><br />
+    <input type="text" name="end_ms_input" id="end_ms_input" value="@membershipPerson._1.end_ms" class="date ui-widget-content ui-corner-all" /><br />
+    <label for="zip_input">Beitragsgruppe</label><br />
+    <input type="text" name="contrib_input" id="contrib_input" value="@membershipPerson._1.contrib" class="text ui-widget-content ui-corner-all" />
   </fieldset>
   </form>
 </div>

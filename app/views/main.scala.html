@@ -14,10 +14,14 @@
         <!--[if IE]><link rel="stylesheet" href="blueprint/ie.css" type="text/css" media="screen, projection" /><![endif]-->
         <script src=@routes.Assets.at("javascripts/jquery.js") type="text/javascript"></script>
         <script src=@routes.Assets.at("javascripts/jquery.dataTables.js") type="text/javascript" language="javascript" ></script>
+        <script src=@routes.Assets.at("javascripts/ajaxfileupload.js") type="text/javascript" language="javascript" ></script>
         <script src=@routes.Assets.at("javascripts/jquery-ui-1.8.20.custom.min.js") type="text/javascript" language="javascript" ></script>
 
         <script type="text/javascript" charset="utf-8">
-
+            $(document).ready(function() {
+              $('#memberpool').dataTable();
+              $('#accounts').dataTable();
+            } );
             $(function() {
                 $( "#change-person-dialog" ).dialog({
                   autoOpen: false,
@@ -34,6 +38,12 @@
                     }
                   }
                 });
+
+                $("#change-membership").click(
+                  function() {
+                    $('#change-membership-dialog').dialog("open");
+                  });
+
                 $("#change-person")
                   .button()
                   .click(
@@ -48,10 +58,34 @@
                       $('#change-address-dialog').dialog("open");
                     });
 
+                $("#upload-rsv-file")
+                  .button()
+                  .click(
+                    function() {
+                      $('#upload-rsv-file-dialog').dialog("open");
+                    });
+
+
+                $( "#change-membership-dialog" ).dialog({
+                  autoOpen: false,
+                  height: 435,
+                  width: 375,
+                  modal: true,
+                  buttons: {
+                    OK: function() {  
+                      sendMembershipForm();
+                      $( this ).dialog( "close" ); 
+                    },
+                    Zurück: function() { 
+                      $( this ).dialog( "close" ); 
+                    }
+                  }
+                });
+                
                 $( "#change-address-dialog" ).dialog({
                   autoOpen: false,
-                  height: 300,
-                  width: 350,
+                  height: 435,
+                  width: 375,
                   modal: true,
                   buttons: {
                     OK: function() {  
@@ -63,6 +97,61 @@
                     }
                   }
                 });
+
+                $( "#upload-rsv-file-dialog" ).dialog({
+                  autoOpen: false,
+                  height: 200,
+                  width: 400,
+                  modal: true,
+                  buttons: {
+                    OK: function() {  
+                      ajaxFileUpload();
+                      $( this ).dialog( "close" ); 
+                    },
+                    Zurück: function() { 
+                      $( this ).dialog( "close" ); 
+                    }
+                  }
+                });
+
+                function ajaxFileUpload()
+                  {
+                    $.ajaxFileUpload( {
+                        url:'/uploadrsv',
+                        secureuri:false,
+                        fileElementId:'fileToUpload',
+                        dataType: 'json',
+                        beforeSend:function()
+                        {
+                          $("#loading").show();
+                        },
+                        complete:function()
+                        {
+                          $("#loading").hide();
+                        },        
+                        success: function (data, status)
+                        {
+                          if(typeof(data.error) != 'undefined')
+                          {
+                            if(data.error != '')
+                            {
+                              alert(data.error);
+                            }else
+                            {
+                              alert(data.msg);
+                            }
+                          }
+                        },
+                        error: function (data, status, e)
+                        {
+                          alert(e);
+                        }
+                      }
+                    )
+                    
+                    return false;
+
+                  }
 
                 function sendPersonForm() {
                   var dataString = "salutation="+$("#salutation_input").val()+"&title="+$("#title_input").val()+"&firstname="+ $("#firstname_input").val()+ "&lastname="+$("#lastname_input").val()+"&birthday="+$("#birthday_input").val();
@@ -97,6 +186,23 @@
                     }
                   });
                 }
+
+                function sendMembershipForm() {
+                  var dataString = "begin_ms="+$("#begin_ms_input").val()+"&end_ms="+$("#end_ms_input").val()+"&contrib="+ $("#contrib_input").val();
+                  var dest = "/changemembership/" + $("#membershipid").html();
+                  $.ajax( {
+                    type: "POST",
+                    url: dest,
+                    data: dataString,
+                    dataType: "json",
+                    success: function(result) {
+                        $("#begin_ms").html(result.begin_ms);
+                        $("#end_ms").html(result.end_ms);
+                        $("#contrib").html(result.contrib);
+                    }
+                  });
+                }
+
               } 
             );
         </script>
