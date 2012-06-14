@@ -16,12 +16,19 @@
         <script src=@routes.Assets.at("javascripts/jquery.dataTables.js") type="text/javascript" language="javascript" ></script>
         <script src=@routes.Assets.at("javascripts/ajaxfileupload.js") type="text/javascript" language="javascript" ></script>
         <script src=@routes.Assets.at("javascripts/jquery-ui-1.8.20.custom.min.js") type="text/javascript" language="javascript" ></script>
-
         <script type="text/javascript" charset="utf-8">
             $(document).ready(function() {
               $('#memberpool').dataTable();
               $('#accounts').dataTable();
+
+              $("select#salutation_input option").each(function() { 
+                this.selected = (this.text == $("select#salutation_input").val()); });
+
+              $("select#title_input option").each(function() { 
+                this.selected = (this.text == $("select#title_input").val()); });
+
             } );
+
             $(function() {
                 $( "#change-person-dialog" ).dialog({
                   autoOpen: false,
@@ -39,7 +46,14 @@
                   }
                 });
 
-                $("#change-membership").click(
+                $("#change-membership-link").click(
+                  function() {
+                    $('#change-membership-dialog').dialog("open");
+                  });
+
+                $("#change-membership")
+                  .button().
+                  click(
                   function() {
                     $('#change-membership-dialog').dialog("open");
                   });
@@ -161,6 +175,14 @@
                     url: dest,
                     data: dataString,
                     dataType: "json",
+                    beforeSend:function()
+                    {
+                      $("#loading").show();
+                    },
+                    complete:function()
+                    {
+                      $("#loading").hide();
+                    },        
                     success: function(result) {
                         $("#salutation").html(result.salutation);
                         $("#title").html(result.title);
@@ -168,6 +190,7 @@
                         $("#lastname").html(result.lastname);
                         $("#birthday").html(result.birthday);
                     }
+
                   });
                 }
                 function sendAddressForm() {
@@ -205,6 +228,7 @@
 
               } 
             );
+
         </script>
         <style type="text/css">#tdright { align:"right" } </style>
     </head>

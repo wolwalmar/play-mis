@@ -12,7 +12,7 @@
 		        @helper.inputText(newMembershipForm("title"),args= 'class -> "text", 'placeholder -> "Titel", '_label -> "Titel")   
 		        @helper.inputText(newMembershipForm("firstname"),args= 'class -> "text", 'placeholder -> "Vorname", '_label -> "Vorname")   
 		        @helper.inputText(newMembershipForm("lastname"),args= 'class -> "text", 'placeholder -> "Zuname", '_label -> "Zuname")
-		        @helper.inputText(newMembershipForm("birthday"),args= 'class -> "date", '_label -> "Geburtstag")   
+		        @helper.inputText(newMembershipForm("birthday"),args= 'class -> "text date", '_label -> "Geburtstag")   
 		    </fieldset>
 		</div>
     	<div class="span-12 last">
@@ -37,6 +37,16 @@
 		        @helper.inputDate(newMembershipForm("contrib"), args= 'class -> "text", '_label -> "Beitr.Grp.")   
 	        </fieldset>
 	    </div>
+    	<!-- div class="span-12">
+			<fieldset>
+				<legend>Kontakt</legend>	    	
+		        @helper.inputText(newMembershipForm("phonehome"), args= 'class -> "text", '_label -> "Telefon privat") 
+		        @helper.inputText(newMembershipForm("phoneoffice"), args= 'class -> "text", '_label -> "Telefon dienstl.")  
+		        @helper.inputText(newMembershipForm("mobile"), args= 'class -> "text", '_label -> "Mobil")  
+		        @helper.inputText(newMembershipForm("email"), args= 'class -> "text", '_label -> "EMail")   
+	        </fieldset>
+	    </div -->
+
 	    <div class="span-12">
 			<fieldset>
 				<legend>Anmeldung</legend>	    	

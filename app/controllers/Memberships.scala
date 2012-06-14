@@ -16,6 +16,7 @@ case class ChangePerson(salutation: String, title: String, firstname: String, la
 case class ChangeAddress(street: String, number: String, zip: String, city: String)
 case class ChangeMembership(begin_ms: Date, end_ms: Date, contrib: String)
 
+
 object Memberships extends Controller {
 	val newMembershipForm: Form[NewMembership] = Form(
 		mapping(
@@ -37,8 +38,7 @@ object Memberships extends Controller {
           "contrib_rsv" -> text,
           "withLPI" -> boolean,
           "withadmissionfee" -> boolean
-      	) 
-		(NewMembership.apply)(NewMembership.unapply)
+      	) (NewMembership.apply)(NewMembership.unapply)
 	)
 
   val changePersonForm: Form[ChangePerson] = Form(
@@ -85,7 +85,7 @@ object Memberships extends Controller {
 
 	def details(id: Long) = Action {
 		val membershipPerson = Membership.findMembershipPersonById(id)
-		Ok(views.html.memberships.details(membershipPerson))
+		Ok(views.html.memberships.details(membershipPerson,Map("salutations" -> List("Frau","Herr","Eheleute"), "titles" -> List("Dr.", "Prof. Dr.", "Dipl.Ing."))))
 	}
 
 	def edit(id: Long) = TODO
@@ -225,6 +225,14 @@ object Memberships extends Controller {
                             newmembership.city,
                             ms_ref,
                             if( newmembership.withLPI ) Some(rsv_ref) else None))
+/*
+        Contact.insert(new Contact(0,
+                            newmembership.phoneHome,
+                            newmembership.phoneOffice,
+                            newmembership.mobile,
+                            newmembership.email,
+                            ms_ref))
+*/
         Account.insert(new Account(0,"Beitrag",new java.util.Date,new java.math.BigDecimal("-63.90"),ms_ref))
         if( newmembership.withadmissionfee ) 
           Account.insert(

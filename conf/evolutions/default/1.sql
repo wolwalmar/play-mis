@@ -40,6 +40,16 @@ create table address (
 	foreign key (rsv_ref) references rsv(id) 	
 );
 
+create table contact (
+	id long Identity primary key,
+	phoneHome varchar(15),
+	phoneOffice varchar(15),
+	mobile varchar(15),
+	email varchar(64),
+	ms_ref long,
+	foreign key (ms_ref) references membership(id)	
+);
+
 create table account (
 	id long Identity primary key,
 	postingtext varchar(100),
@@ -52,6 +62,7 @@ create table account (
 # --- !Downs
 drop table account;
 drop table rsv;
+drop table contact;
 drop table address;
 drop table person;
 drop table membership;

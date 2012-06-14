@@ -54,8 +54,8 @@ object Membership {
 		membershipParser ~ Person.personParser ~ Account.accountParser map (flatten)
 	}
 
-	def membershipPersonAddressParser: RowParser[(Membership,Person,Address)] = {
-		membershipParser ~ Person.personParser ~ Address.addressParser map (flatten)
+	def membershipPersonAddressParser: RowParser[(Membership,Person,Address,Contact)] = {
+		membershipParser ~ Person.personParser ~ Address.addressParser ~ Contact.contactParser map (flatten)
 	}
 
 	def findAll: List[Membership] = DB.withConnection {
@@ -70,15 +70,16 @@ object Membership {
 		sql.as(membershipPersonParser *)
 	}
 
-	def findMembershipPersonById(id: Long): (Membership,Person,Address,List[Account],Option[LegalProtectionInsurance]) = DB.withConnection {
+	def findMembershipPersonById(id: Long): (Membership,Person,Address,List[Account],Option[LegalProtectionInsurance],Contact) = DB.withConnection {
 		implicit connection => 
 		val sql = SQL(
 			"select "+
-				"m.*,p.*,a.* "+
+				"m.*,p.*,a.*,c.* "+
 			"from "+
 				"membership m "+
 				"join person p on p.ms_ref=m.id "+
 				"join address a on a.ms_ref=m.id "+
+				"join contact c on c.ms_ref=m.id "+
 			"where m.id={id}").on("id" -> id)  
 		val membershipPerson = sql.as(membershipPersonAddressParser *).head
 		(membershipPerson._1,
@@ -88,7 +89,8 @@ object Membership {
 			membershipPerson._3.rsv_ref match {
 				case Some(ref) => Option(LegalProtectionInsurance.findLegalProtectionById(ref))
 				case None => None
-			})
+			},
+			membershipPerson._4)
 	}
 
 	def findByMembershipId(membershipId: Long): Membership  = DB.withConnection {
@@ -113,8 +115,6 @@ object Membership {
 		DB.withConnection {
 			implicit connection =>
 			val next = nextSeqNum
-
-			println(next)
 
 			SQL("""insert into
 						membership

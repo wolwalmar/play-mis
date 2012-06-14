@@ -1,23 +1,25 @@
-@(membershipPerson: (models.memberships.Membership,models.persons.Person,models.persons.Address, List[models.finance.Account], Option[models.persons.LegalProtectionInsurance]))
+@(membershipPerson: (models.memberships.Membership,models.persons.Person,models.persons.Address, List[models.finance.Account], Option[models.persons.LegalProtectionInsurance],models.persons.Contact), defaultData: Map[String,List[String]])
 
 @main("Welcome to Play 2.0") {
-	<hr />
-	<h1><span id="membershipid">@membershipPerson._1.membershipId</span> <span>@membershipPerson._2.lastname, @membershipPerson._2.firstname</span></h1>
-	<hr />
-
+	<div class="span-24">
+		<hr />
+		<h1><span id="membershipid">@membershipPerson._1.membershipId</span> <span>@membershipPerson._2.lastname, @membershipPerson._2.firstname</span></h1>
+		<img id="loading" src="/public/images/loading.gif" style="display:none;">
+		<hr />
+	</div>
 	<div class="span-12">
 		<fieldset>
 			<legend>Mitgliedsdaten</legend>
 			<div class="span-2"><label>Anrede:</label></div>
-			<div class="span-3"><span id="salutation">@membershipPerson._2.salutation</span></div>
+			<div class="span-3" id="salutation">@membershipPerson._2.salutation</div>
 			<div class="span-2"><label>Titel:</label></div>
-			<div class="span-2"><span id="title">@membershipPerson._2.title</span></div><br />
+			<div class="span-2" id="title">@membershipPerson._2.title</div><br />
 			<div class="span-2"><label>Vorname:</label></div>
-			<div class="span-4 print"><span id="firstname">@membershipPerson._2.firstname</span></div><br />
+			<div class="span-4" id="firstname">@membershipPerson._2.firstname</div><br />
 			<div class="span-2"><label>Zuname:</label></div>
-			<div class="span-4"><span id="lastname">@membershipPerson._2.lastname</span></div><br />
+			<div class="span-4" id="lastname">@membershipPerson._2.lastname</div><br />
 			<div class="span-2"><label>Geburtstag:</label></div>
-			<div class="span-2"><span id="birthday">@membershipPerson._2.birthday</span></div><br /><br />
+			<div class="span-2" id="birthday">@membershipPerson._2.birthday</div><br /><br />
 			<div class="span-2"><button id="change-person">Ändern</button></div>
 		</fieldset>
 	</div>
@@ -45,13 +47,14 @@
 
 	<div class="span-12">
 		<fieldset>
-			<legend><a id="change-membership">Mitgliedschaft</a></legend>
+			<legend><a id="change-membership-link">Mitgliedschaft</a></legend>
 			<div class="span-2"><label>Eintritt:</label></div>
 			<div class="span-2"><span id="begin_ms">@membershipPerson._1.begin_ms</span></div>
 			<div class="span-2"><label>Austritt:</label></div> 
 			<div class="span-2" id="end_ms">@membershipPerson._1.end_ms</div> <br />
 			<div class="span-2"><label>Beitr.Grp.:</label></div>
 			<div class="span-2" id="contrib">@membershipPerson._1.contrib</div><br /><br />
+			<div class="span-2"><button id="change-membership">Ändern</button></div>
 		</fieldset>
 	</div>
 
@@ -59,11 +62,11 @@
 		<fieldset>
 			<legend>Kontaktdaten</legend>
 			<div class="span-3"><label>Telefon privat:</label></div>
-			<div class="span-3">030 123 2345</div> <br />
+			<div class="span-3" id="phoneHome">@membershipPerson._6.phoneHome</div> <br />
 			<div class="span-3"><label>Telefon dienstl.:</label></div>
-			<div class="span-3">030 221 4432</div> <br />
+			<div class="span-3" id="phoneOffice">@membershipPerson._6.phoneOffice</div> <br />
 			<div class="span-3"><label>Mobil:</label></div>
-			<div class="span-3">0171 223 3212</div>
+			<div class="span-3" id="mobile">@membershipPerson._6.mobile</div>
 		</fieldset>
 	</div>
 
@@ -122,15 +125,25 @@
   <form>
   <fieldset>
     <label for="salutation_input">Anrede</label>
-    <input type="text" name="salutation" id="salutation_input" class="text ui-widget-content ui-corner-all" value="@membershipPerson._2.salutation"/>
+    <select type="text" name="salutation_input" id="salutation_input" class="text ui-widget-content ui-corner-all" value="@membershipPerson._2.salutation">
+		@for(opt <- defaultData.getOrElse("salutations",List())) {
+        	<option value="@opt">@opt</option>
+		}
+        <option style="visibility:hidden" selected="selected" value="@membershipPerson._2.salutation" />
+    </select>
     <label for="title_input">Titel</label>
-    <input type="text" name="title_input" id="title_input" class="text ui-widget-content ui-corner-all" value="@membershipPerson._2.title"/>
+    <select type="text" name="title_input" id="title_input" class="text ui-widget-content ui-corner-all" value="@membershipPerson._2.title">
+		@for(opt <- defaultData.getOrElse("titles",List())) {
+        	<option value="@opt">@opt</option>
+		}
+        <option style="visibility:hidden" selected="selected" value="@membershipPerson._2.title" />
+	</select><br />
     <label for="firstname_input">Vorname</label>
     <input type="text" name="firstname" id="firstname_input" value="@membershipPerson._2.firstname" class="text ui-widget-content ui-corner-all" />
     <label for="lastname_input">Zuname</label>
     <input type="text" name="lastname" id="lastname_input" value="@membershipPerson._2.lastname" class="text ui-widget-content ui-corner-all" />
     <label for="birthday_input">Geburtstag</label>
-    <input type="text" name="birthday_input" id="birthday_input" value="@membershipPerson._2.birthday" class="date ui-widget-content ui-corner-all" />
+    <input type="text" name="birthday_input" id="birthday_input" value="@membershipPerson._2.birthday" class="text date ui-widget-content ui-corner-all" />
   </fieldset>
   </form>
 </div>
