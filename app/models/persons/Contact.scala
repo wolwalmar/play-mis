@@ -20,8 +20,19 @@ case class Contact(
 
 object Contact {
 	val contactParser: RowParser[Contact] = {
-		long("id") ~ str("phoneHome") ~ str("phoneOffice") ~ str("mobile") ~ str("email")  ~ long("ms_ref") map {
-			case id ~ phoneHome ~ phoneOffice ~ mobile ~ email ~ ms_ref=> Contact(id, phoneHome, phoneOffice, mobile, email, ms_ref)
+		long("id") ~ 
+		str("phoneHome") ~
+		str("phoneOffice") ~ 
+		str("mobile") ~ 
+		str("email")  ~ 
+		long("ms_ref") map {
+			case id ~ 
+				phoneHome ~ 
+				phoneOffice ~ 
+				mobile ~ 
+				email ~ 
+				ms_ref=> Contact(id, phoneHome, phoneOffice, mobile, email, ms_ref)
+			case _ => Contact(0L, "", "", "", "", 0L)
 		}
 	}
 

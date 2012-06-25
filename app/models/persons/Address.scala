@@ -22,7 +22,8 @@ case class Address(
 object Address {
 	val addressParser: RowParser[Address] = {
 		long("id") ~ str("street") ~ str("number") ~ str("zip") ~ str("city") ~ long("ms_ref") ~ get[Option[Long]]("rsv_ref") map {
-			case id ~ street ~ number ~ zip ~ city ~ ms_ref ~ rsv_ref => Address(id, street, number, zip, city, ms_ref, rsv_ref)
+			case id ~ street ~ number ~ zip ~ city ~ ms_ref ~ rsv_ref => 
+				Address(id, street, number, zip, city, ms_ref, rsv_ref)
 		}
 	}
 

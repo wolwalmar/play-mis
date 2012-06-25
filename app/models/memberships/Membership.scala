@@ -79,7 +79,7 @@ object Membership {
 				"membership m "+
 				"join person p on p.ms_ref=m.id "+
 				"join address a on a.ms_ref=m.id "+
-				"join contact c on c.ms_ref=m.id "+
+				"left outer join contact c on c.ms_ref=m.id "+
 			"where m.id={id}").on("id" -> id)  
 		val membershipPerson = sql.as(membershipPersonAddressParser *).head
 		(membershipPerson._1,
