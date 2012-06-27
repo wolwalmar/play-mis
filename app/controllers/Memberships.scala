@@ -33,6 +33,11 @@ object Memberships extends Controller {
             "number" -> text,
             "zip" -> text,
             "city" -> text)(ChangeAddress.apply)(ChangeAddress.unapply),
+          "contact" -> mapping(
+            "phoneHome" -> text, 
+            "phoneOffice" -> text, 
+            "mobile" -> text, 
+            "email" -> text)(ChangeContact.apply)(ChangeContact.unapply),
           "begin_rsv" -> date,
           "end_rsv" -> date,
           "contrib_rsv" -> text,
@@ -48,8 +53,7 @@ object Memberships extends Controller {
           "firstname" -> text,
           "lastname" -> text,
           "birthday" -> date
-        ) 
-    (ChangePerson.apply)(ChangePerson.unapply)
+        ) (ChangePerson.apply)(ChangePerson.unapply)
   )
 
   val changeAddressForm: Form[ChangeAddress] = Form(
@@ -58,8 +62,16 @@ object Memberships extends Controller {
           "number" -> text,
           "zip" -> text,
           "city" -> text
-        ) 
-    (ChangeAddress.apply)(ChangeAddress.unapply)
+        ) (ChangeAddress.apply)(ChangeAddress.unapply)
+  )
+
+  val changeContactForm: Form[ChangeContact] = Form(
+    mapping(
+          "phoneHome" -> text, 
+          "phoneOffice" -> text, 
+          "mobile" -> text, 
+          "email" -> text
+        ) (ChangeContact.apply)(ChangeContact.unapply)
   )
 
   val changeMembershipForm: Form[ChangeMembership] = Form(
@@ -67,8 +79,7 @@ object Memberships extends Controller {
           "begin_ms" -> date,
           "end_ms" -> date,
           "contrib" -> text
-        ) 
-    (ChangeMembership.apply)(ChangeMembership.unapply)
+        ) (ChangeMembership.apply)(ChangeMembership.unapply)
   )
 
 	/**
@@ -161,6 +172,32 @@ object Memberships extends Controller {
           })
   }
 
+  def changeContact(membershipId: Long) = Action { implicit request =>
+    changeContactForm.bindFromRequest.fold(
+      errors => { println("error"); BadRequest("error") },
+      changes => {
+          println(membershipId)
+          val ms = Membership.findByMembershipId(membershipId)
+          val contact = Contact.findByMsRef(ms.id)
+          Contact.update(
+            new Contact(
+              contact.id, 
+              changes.phoneHome,
+              changes.phoneOffice,
+              changes.mobile,
+              changes.email,
+              ms.membershipId))
+
+          Ok(Json.toJson(
+              Map(
+                "phoneHome"->Json.toJson(changes.phoneHome),
+                "phoneOffice"->Json.toJson(changes.phoneOffice),
+                "mobile"->Json.toJson(changes.mobile),
+                "email"->Json.toJson(changes.email)
+              )))
+          })
+  }
+
   def changeMembership(membershipId: Long) = Action { implicit request =>
     changeMembershipForm.bindFromRequest.fold(
       errors => { println("error"); BadRequest("error") },
@@ -225,14 +262,14 @@ object Memberships extends Controller {
                             newmembership.address.city,
                             ms_ref,
                             if( newmembership.withLPI ) Some(rsv_ref) else None))
-/*
+
         Contact.insert(new Contact(0,
-                            newmembership.phoneHome,
-                            newmembership.phoneOffice,
-                            newmembership.mobile,
-                            newmembership.email,
+                            newmembership.contact.phoneHome,
+                            newmembership.contact.phoneOffice,
+                            newmembership.contact.mobile,
+                            newmembership.contact.email,
                             ms_ref))
-*/
+
         Account.insert(new Account(0,"Beitrag",new java.util.Date,new java.math.BigDecimal("-63.90"),ms_ref))
         if( newmembership.withadmissionfee ) 
           Account.insert(

@@ -73,6 +73,13 @@
                       $('#change-address-dialog').dialog("open");
                     });
 
+                $("#change-contact")
+                  .button()
+                  .click(
+                    function() {
+                      $('#change-contact-dialog').dialog("open");
+                    });
+
                 $("#upload-rsv-file")
                   .button()
                   .click(
@@ -105,6 +112,22 @@
                   buttons: {
                     OK: function() {  
                       sendAddressForm();
+                      $( this ).dialog( "close" ); 
+                    },
+                    Zurück: function() { 
+                      $( this ).dialog( "close" ); 
+                    }
+                  }
+                });
+
+                $( "#change-contact-dialog" ).dialog({
+                  autoOpen: false,
+                  height: 435,
+                  width: 375,
+                  modal: true,
+                  buttons: {
+                    OK: function() {  
+                      sendContactForm();
                       $( this ).dialog( "close" ); 
                     },
                     Zurück: function() { 
@@ -207,6 +230,23 @@
                         $("#number").html(result.number);
                         $("#zip").html(result.zip);
                         $("#city").html(result.city);
+                    }
+                  });
+                }
+
+                function sendContactForm() {
+                  var dataString = "phoneHome="+$("#phoneHome_input").val()+"&phoneOffice="+$("#phoneOffice_input").val()+"&mobile="+ $("#mobile_input").val()+ "&email="+$("#email_input").val();
+                  var dest = "/changecontact/" + $("#membershipid").html();
+                  $.ajax( {
+                    type: "POST",
+                    url: dest,
+                    data: dataString,
+                    dataType: "json",
+                    success: function(result) {
+                        $("#phoneHome").html(result.phoneHome);
+                        $("#phoneOffice").html(result.phoneOffice);
+                        $("#mobile").html(result.mobile);
+                        $("#email").html(result.email);
                     }
                   });
                 }

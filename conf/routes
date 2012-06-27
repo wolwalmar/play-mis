@@ -14,6 +14,7 @@ POST	/memberships    		controllers.Memberships.submit
 POST	/changeperson/:id 		controllers.Memberships.changePerson(id: Long)
 POST	/changeaddress/:id 		controllers.Memberships.changeAddress(id: Long)
 POST	/changemembership/:id	controllers.Memberships.changeMembership(id: Long)
+POST	/changecontact/:id		controllers.Memberships.changeContact(id: Long)
 
 POST	/uploadrsv				controllers.Memberships.douploadrsv
 
