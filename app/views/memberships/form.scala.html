@@ -8,20 +8,20 @@
     	<div class="span-12">
 	    	<fieldset>
 	    		<legend>Mitgliedsdaten</legend>
-		        @helper.inputText(newMembershipForm("salutation"),args= 'class -> "text", 'placeholder -> "Anrede", '_label -> "Anrede")
-		        @helper.inputText(newMembershipForm("title"),args= 'class -> "text", 'placeholder -> "Titel", '_label -> "Titel")   
-		        @helper.inputText(newMembershipForm("firstname"),args= 'class -> "text", 'placeholder -> "Vorname", '_label -> "Vorname")   
-		        @helper.inputText(newMembershipForm("lastname"),args= 'class -> "text", 'placeholder -> "Zuname", '_label -> "Zuname")
-		        @helper.inputText(newMembershipForm("birthday"),args= 'class -> "text date", '_label -> "Geburtstag")   
+		        @helper.inputText(newMembershipForm("person.salutation"),args= 'class -> "text", 'placeholder -> "Anrede", '_label -> "Anrede")
+		        @helper.inputText(newMembershipForm("person.title"),args= 'class -> "text", 'placeholder -> "Titel", '_label -> "Titel")   
+		        @helper.inputText(newMembershipForm("person.firstname"),args= 'class -> "text", 'placeholder -> "Vorname", '_label -> "Vorname")   
+		        @helper.inputText(newMembershipForm("person.lastname"),args= 'class -> "text", 'placeholder -> "Zuname", '_label -> "Zuname")
+		        @helper.inputText(newMembershipForm("person.birthday"),args= 'class -> "text date", '_label -> "Geburtstag")   
 		    </fieldset>
 		</div>
     	<div class="span-12 last">
 		    <fieldset>
 		    	<legend>Adresse</legend>
-		        @helper.inputText(newMembershipForm("street"),args= 'class -> "text", 'placeholder -> "Straße", '_label -> "Straße")   
-		        @helper.inputText(newMembershipForm("number"),args= 'class -> "text", 'placeholder -> "Hausnummer", '_label -> "Hausnummer") 
-		        @helper.inputText(newMembershipForm("zip"),args= 'class -> "text", 'placeholder -> "PLZ", '_label -> "PLZ")   
-		        @helper.inputText(newMembershipForm("city"),args= 'class -> "text", 'placeholder -> "Ort", '_label -> "Ort")
+		        @helper.inputText(newMembershipForm("address.street"),args= 'class -> "text", 'placeholder -> "Straße", '_label -> "Straße")   
+		        @helper.inputText(newMembershipForm("address.number"),args= 'class -> "text", 'placeholder -> "Hausnummer", '_label -> "Hausnummer") 
+		        @helper.inputText(newMembershipForm("address.zip"),args= 'class -> "text", 'placeholder -> "PLZ", '_label -> "PLZ")   
+		        @helper.inputText(newMembershipForm("address.city"),args= 'class -> "text", 'placeholder -> "Ort", '_label -> "Ort")
 		        @helper.checkbox(newMembershipForm("withLPI"), '_label -> "Mit RSV")
 		        @helper.inputDate(newMembershipForm("begin_rsv"),args= 'class -> "date", '_label -> "RSV Beginn")  
 		        @helper.inputDate(newMembershipForm("end_rsv"),args= 'class -> "date", '_label -> "RSV Ende")  
@@ -31,10 +31,10 @@
     	<div class="span-12">
 			<fieldset>
 				<legend>Mitgliedschaft</legend>	    	
-		        @helper.inputText(newMembershipForm("membershipid"), args= '_error -> newMembershipForm.globalError,'class -> "text", '_label -> "Mitglied-Nr.") 
-		        @helper.inputDate(newMembershipForm("begin_ms"), args= 'class -> "date", '_label -> "Eintritt")  
-		        @helper.inputDate(newMembershipForm("end_ms"), args= 'class -> "date", '_label -> "Austritt")  
-		        @helper.inputDate(newMembershipForm("contrib"), args= 'class -> "text", '_label -> "Beitr.Grp.")   
+		        @helper.inputText(newMembershipForm("membership.membershipid"), args= '_error -> newMembershipForm.globalError,'class -> "text", '_label -> "Mitglied-Nr.") 
+		        @helper.inputDate(newMembershipForm("membership.begin_ms"), args= 'class -> "date", '_label -> "Eintritt")  
+		        @helper.inputDate(newMembershipForm("membership.end_ms"), args= 'class -> "date", '_label -> "Austritt")  
+		        @helper.inputDate(newMembershipForm("membership.contrib"), args= 'class -> "text", '_label -> "Beitr.Grp.")   
 	        </fieldset>
 	    </div>
     	<!-- div class="span-12">

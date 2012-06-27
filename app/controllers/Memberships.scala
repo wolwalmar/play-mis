@@ -12,27 +12,27 @@ import models.memberships._
 import models.persons._
 import models.finance._
 
-case class ChangePerson(salutation: String, title: String, firstname: String, lastname: String, birthday: java.util.Date)
-case class ChangeAddress(street: String, number: String, zip: String, city: String)
-case class ChangeMembership(begin_ms: Date, end_ms: Date, contrib: String)
 
 
 object Memberships extends Controller {
 	val newMembershipForm: Form[NewMembership] = Form(
 		mapping(
-      		"membershipid" -> text,
-          "begin_ms" -> date,
-          "end_ms" -> date,
-          "contrib" -> text,
-          "salutation" -> text,
-          "title" -> text,
-      		"firstname" -> text,
-          "lastname" -> text,
-          "birthday" -> date,
-          "street" -> text,
-          "number" -> text,
-          "zip" -> text,
-          "city" -> text,
+          "membership" -> mapping(
+        		"membershipid" -> text,
+            "begin_ms" -> date,
+            "end_ms" -> date,
+            "contrib" -> text )(BrandNewMembership.apply)(BrandNewMembership.unapply),
+          "person" -> mapping(
+            "salutation" -> text,
+            "title" -> text,
+        		"firstname" -> text,
+            "lastname" -> text,
+            "birthday" -> date)(ChangePerson.apply)(ChangePerson.unapply),
+          "address" -> mapping(
+            "street" -> text,
+            "number" -> text,
+            "zip" -> text,
+            "city" -> text)(ChangeAddress.apply)(ChangeAddress.unapply),
           "begin_rsv" -> date,
           "end_rsv" -> date,
           "contrib_rsv" -> text,
@@ -196,16 +196,16 @@ object Memberships extends Controller {
             // We got a valid User value, display the summary
       newmembership => {
         val ms_ref = Membership.insert(new Membership(0,
-                            newmembership.membershipid.toLong,
-                            newmembership.begin_ms,
-                            newmembership.end_ms,
-                            newmembership.contrib.toInt))
+                            newmembership.membership.membershipid.toLong,
+                            newmembership.membership.begin_ms,
+                            newmembership.membership.end_ms,
+                            newmembership.membership.contrib.toInt))
         Person.insert(new Person(0,
-                            newmembership.salutation,
-                            newmembership.title,
-                            newmembership.firstname,
-                            newmembership.lastname,
-                            newmembership.birthday,
+                            newmembership.person.salutation,
+                            newmembership.person.title,
+                            newmembership.person.firstname,
+                            newmembership.person.lastname,
+                            newmembership.person.birthday,
                             ms_ref))
 
         val rsv_ref = if( newmembership.withLPI) {
@@ -219,10 +219,10 @@ object Memberships extends Controller {
         
         println("ref "+rsv_ref)
         Address.insert(new Address(0,
-                            newmembership.street,
-                            newmembership.number,
-                            newmembership.zip,
-                            newmembership.city,
+                            newmembership.address.street,
+                            newmembership.address.number,
+                            newmembership.address.zip,
+                            newmembership.address.city,
                             ms_ref,
                             if( newmembership.withLPI ) Some(rsv_ref) else None))
 /*
