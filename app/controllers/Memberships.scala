@@ -16,11 +16,12 @@ import models.finance._
 
 object Memberships extends Controller {
 	val newMembershipForm: Form[NewMembership] = Form(
+    // !!! no CamelCase !!!
 		mapping(
           "membership" -> mapping(
         		"membershipid" -> text,
             "begin_ms" -> date,
-            "end_ms" -> date,
+            "end_ms" -> optional(date),
             "contrib" -> text )(BrandNewMembership.apply)(BrandNewMembership.unapply),
           "person" -> mapping(
             "salutation" -> text,
@@ -34,8 +35,8 @@ object Memberships extends Controller {
             "zip" -> text,
             "city" -> text)(ChangeAddress.apply)(ChangeAddress.unapply),
           "contact" -> mapping(
-            "phoneHome" -> text, 
-            "phoneOffice" -> text, 
+            "phonehome" -> text, 
+            "phoneoffice" -> text, 
             "mobile" -> text, 
             "email" -> text)(ChangeContact.apply)(ChangeContact.unapply),
           "begin_rsv" -> date,
@@ -209,7 +210,7 @@ object Memberships extends Controller {
               ms.id, 
               membershipId,
               changes.begin_ms,
-              changes.end_ms,
+              Option(changes.end_ms),
               changes.contrib.toInt))
           val df = new java.text.SimpleDateFormat("yyyy-MM-dd")
           Ok(Json.toJson(
@@ -227,7 +228,7 @@ object Memberships extends Controller {
   def submit = Action { implicit request =>
     newMembershipForm.bindFromRequest.fold(
       // Form has errors, redisplay it
-      errors => {println("error"); BadRequest(html.memberships.form(errors))},
+      errors => {println(errors); BadRequest(html.memberships.form(errors))},
       
       // We got a valid User value, display the summary
             // We got a valid User value, display the summary

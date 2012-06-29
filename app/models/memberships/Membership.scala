@@ -17,7 +17,7 @@ case class Membership(
 	id: Long,
 	membershipId: Long,
 	begin_ms: Date,
-	end_ms: Date,
+	end_ms: Option[Date],
 	contrib: Int
 )
 
@@ -26,7 +26,7 @@ object Membership {
 		long("id") ~ 
 		long("ms_id") ~
 		date("begin_ms") ~
-		date("end_ms") ~
+		get[Option[Date]]("end_ms") ~
 		int("contrib") map {
 			case id ~ membershipId ~ begin_ms ~ end_ms ~ contrib => Membership(id,membershipId,begin_ms,end_ms,contrib)
 		}
@@ -169,7 +169,7 @@ object Membership {
         	val ms_ref = Membership.insert(new Membership(0,
                             mid.toLong,
                             if(begin_ms.trim.length==0) new java.util.Date() else sdf.parse(begin_ms),
-                            if(end_ms.trim.length==0) new java.util.Date() else sdf.parse(end_ms),
+                            if(end_ms.trim.length==0) None else Option(sdf.parse(end_ms)),
                             1))
         	Person.insert(new Person(0,
                             "",
