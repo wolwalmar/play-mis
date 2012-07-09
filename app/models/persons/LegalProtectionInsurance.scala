@@ -10,43 +10,38 @@ import anorm.SqlQuery
 import play.api.db.DB
 import play.api.Play.current
 
+import models.db._
+
 case class LegalProtectionInsurance(
 	id: Long,
 	begin_rsv: Date,
 	end_rsv: Option[Date],
 	contrib: Int)
 
-object LegalProtectionInsurance {
-	val lpiParser: RowParser[LegalProtectionInsurance] = {
+object LegalProtectionInsurance extends DbAccess {
+	type Entity = LegalProtectionInsurance
+	override val tablename = "rsv"
+
+	override val rowParser: RowParser[LegalProtectionInsurance] = {
 		long("id") ~ date("begin_rsv") ~ get[Option[Date]]("end_rsv") ~ int("contrib") map {
 			case id ~ begin_rsv ~ end_rsv ~ contrib => LegalProtectionInsurance(id, begin_rsv, end_rsv, contrib)
 		}
 	}
 
-	val lpiRSParser: ResultSetParser[List[LegalProtectionInsurance]] = {
-		lpiParser *
-	}
+	// val lpiIdParser: RowParser[Long] = {
+	// 	long("next") map {
+	// 		case next => next
+	// 	}
+	// }
 
-	val lpiIdParser: RowParser[Long] = {
-		long("next") map {
-			case next => next
-		}
-	}
-
-	val lpiIdRSParser: ResultSetParser[List[Long]] = {
-		lpiIdParser *
-	}
-
-	def findById(id: Long): LegalProtectionInsurance = DB.withConnection {
-		implicit connection => 
-		val sql = SQL("select * from rsv where id={id}").on("id" -> id)
-		sql.as(lpiParser *).head
-	}
+	// val lpiIdRSParser: ResultSetParser[List[Long]] = {
+	// 	lpiIdParser *
+	// }
 
 	def insert(a: LegalProtectionInsurance): Long = {
 		DB.withConnection {
 			implicit connection =>
-			val next = nextSeqNum
+			val next = nextSeqNum("rsv_id_seq")
 			SQL("""insert into
 						rsv
 					(id,begin_rsv, end_rsv, contrib) values
@@ -91,15 +86,9 @@ object LegalProtectionInsurance {
 		}
 	}
 
-	def findLegalProtectionById(id: Long): LegalProtectionInsurance = DB.withConnection {
-		implicit connection => 
-		val sql = SQL("select * from rsv where id={id}").on("id" -> id)
-		sql.as(lpiRSParser).head
-	}
-
-	def nextSeqNum: Long = DB.withConnection {
-		implicit connection =>
-			return SQL("select rsv_id_seq.nextval as next from dual").as(lpiIdRSParser).head
-	}
+	// def nextSeqNum: Long = DB.withConnection {
+	// 	implicit connection =>
+	// 		return SQL("select rsv_id_seq.nextval as next from dual").as(scalar[Long])
+	// }
 
 }

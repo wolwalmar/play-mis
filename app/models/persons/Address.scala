@@ -10,6 +10,8 @@ import anorm.SqlQuery
 import play.api.db.DB
 import play.api.Play.current
 
+import models.db._
+
 case class Address(
 		id: Long, 
 		street: String, 
@@ -19,19 +21,19 @@ case class Address(
 		ms_ref: Long,
 		rsv_ref: Option[Long])
 
-object Address {
-	val addressParser: RowParser[Address] = {
+object Address extends DbAccess {
+	type Entity = Address
+
+	override val tablename = "address"
+
+	override val rowParser: RowParser[Address] = {
 		long("id") ~ str("street") ~ str("number") ~ str("zip") ~ str("city") ~ long("ms_ref") ~ get[Option[Long]]("rsv_ref") map {
 			case id ~ street ~ number ~ zip ~ city ~ ms_ref ~ rsv_ref => 
 				Address(id, street, number, zip, city, ms_ref, rsv_ref)
 		}
 	}
 
-	def findByMsRef(ms_ref: Long): Address = DB.withConnection {
-		implicit connection => 
-		val sql = SQL("select * from address where ms_ref={ms_ref}").on("ms_ref" -> ms_ref)
-		sql.as(addressParser *).head
-	}
+	// override val rowParser = addressParser
 
 	def insert(a: Address): Boolean = {
 		DB.withConnection {

@@ -13,6 +13,8 @@ import play.api.Play.current
 import models.persons._
 import models.finance._
 
+import models.db._
+
 case class Membership(
 	id: Long,
 	membershipId: Long,
@@ -21,7 +23,10 @@ case class Membership(
 	contrib: Int
 )
 
-object Membership {
+object Membership extends DbAccess {
+	type Entity = Membership
+	override val tablename = "Membership"
+
 	val membershipParser: RowParser[Membership] = {
 		long("id") ~ 
 		long("ms_id") ~
@@ -32,36 +37,22 @@ object Membership {
 		}
 	}
 
-	val membershipIdParser: RowParser[Long] = {
-		long("next") map {
-			case next => next
-		}
-	}
-
 	val membershipsParser: ResultSetParser[List[Membership]] = {
 		membershipParser *
 	}
 
-	val membershipIdRSParser: ResultSetParser[List[Long]] = {
-		membershipIdParser *
-	}
+	override val rowParser = membershipParser
 
 	def membershipPersonParser: RowParser[(Membership,Person)] = {
-		membershipParser ~ Person.personParser map (flatten)
+		membershipParser ~ Person.rowParser map (flatten)
 	}
 
 	def membershipPersonAccountParser: RowParser[(Membership,Person,Account)] = {
-		membershipParser ~ Person.personParser ~ Account.accountParser map (flatten)
+		membershipParser ~ Person.rowParser ~ Account.accountParser map (flatten)
 	}
 
 	def membershipPersonAddressParser: RowParser[(Membership,Person,Address,Contact)] = {
-		membershipParser ~ Person.personParser ~ Address.addressParser ~ Contact.contactParser map (flatten)
-	}
-
-	def findAll: List[Membership] = DB.withConnection {
-		implicit connection => 
-		val sql = SQL("select * from membership")
-		sql.as(membershipsParser)
+		membershipParser ~ Person.rowParser ~ Address.rowParser ~ Contact.rowParser map (flatten)
 	}
 
 	def findAllMembershipsPersons: List[(Membership,Person)] = DB.withConnection {
@@ -87,7 +78,7 @@ object Membership {
 			membershipPerson._3,
 			findAllPostingsById(id),
 			membershipPerson._3.rsv_ref match {
-				case Some(ref) => Option(LegalProtectionInsurance.findLegalProtectionById(ref))
+				case Some(ref) => Option(LegalProtectionInsurance.findById(ref))
 				case None => None
 			},
 			membershipPerson._4)
@@ -96,12 +87,6 @@ object Membership {
 	def findByMembershipId(membershipId: Long): Membership  = DB.withConnection {
 		implicit connection => 
 		val sql = SQL("select * from membership where ms_id={membershipId}").on("membershipId" -> membershipId)
-		sql.as(membershipsParser).head
-	}
-
-	def findById(id: Long): Membership  = DB.withConnection {
-		implicit connection => 
-		val sql = SQL("select * from membership where id={id}").on("id" -> id)
 		sql.as(membershipsParser).head
 	}
 
@@ -114,7 +99,7 @@ object Membership {
 	def insert(membership:Membership) = {
 		DB.withConnection {
 			implicit connection =>
-			val next = nextSeqNum
+			val next = nextSeqNum("ms_id_seq")
 
 			SQL("""insert into
 						membership
@@ -152,15 +137,9 @@ object Membership {
 		}
 	}
 
-	def nextSeqNum: Long = DB.withConnection {
-		implicit connection =>
-			return SQL("select ms_id_seq.nextval as next from dual").as(membershipIdRSParser).head
-	}
-
 	def loadFromFile(filename: String) = {
 		def firstnameFrom(name: String) = { val s = name.split(","); if(s.length==2) s(1).trim else "" }
 		def lastnameFrom(name: String) = { val s = name.split(","); if(s.length>=1) s(0).trim else "" }
-		//ig 1,verein 3,nr 8, name30, name2 30,strasse 30, land 3, plz 5, ort 24, ig 4, von 8, bis 8, ig 3, von 8, bis 8
 		val MemberRE = """.{1}(.{3})(.{8})(.{30})(.{30})(.{30})(.{3})(.{5})(.{24}).{4}(.{8})(.{8}).{3}(.{8})(.{8}).*""".r
 		val src = scala.io.Source.fromFile(filename)
 		val sdf = new java.text.SimpleDateFormat("ddMMyyyy")

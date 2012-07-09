@@ -10,6 +10,8 @@ import anorm.SqlQuery
 import play.api.db.DB
 import play.api.Play.current
 
+import models.db._
+
 case class Person(
 	id: Long, 
 	salutation: String,
@@ -19,17 +21,14 @@ case class Person(
 	birthday: Date,
 	ms_ref: Long)
 
-object Person {
-	val personParser: RowParser[Person] = {
+object Person extends DbAccess {
+	type Entity = Person
+	override val tablename = "person"
+
+	override val rowParser: RowParser[Person] = {
 		long("id") ~ str("salutation") ~ str("title") ~ str("firstname") ~ str("lastname") ~ date("birthday") ~ long("ms_ref") map {
 			case id ~ salutation ~ title ~ firstname ~ lastname ~ birthday ~ ms_ref => Person(id, salutation, title, firstname, lastname, birthday, ms_ref)
 		}
-	}
-
-	def findByMsRef(ms_ref: Long): Person = DB.withConnection {
-		implicit connection => 
-		val sql = SQL("select * from person where ms_ref={ms_ref}").on("ms_ref" -> ms_ref)
-		sql.as(personParser *).head
 	}
 
 	def insert(p: Person): Boolean = {
