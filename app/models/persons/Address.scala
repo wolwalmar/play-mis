@@ -83,4 +83,16 @@ object Address {
 				"id" -> a.id).executeUpdate == 1
 		}
 	}
+	def removeLPI(a: Address): Boolean = {
+		DB.withConnection {
+			implicit connection =>
+			SQL("""update
+						address
+					set 
+						rsv_ref=NULL
+					where
+						id={id}""")
+			.on("id" -> a.id).executeUpdate == 1
+		}
+	}
 }

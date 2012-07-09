@@ -23,9 +23,9 @@
 		        @helper.inputText(newMembershipForm("address.zip"),args= 'class -> "text", 'placeholder -> "PLZ", '_label -> "PLZ")   
 		        @helper.inputText(newMembershipForm("address.city"),args= 'class -> "text", 'placeholder -> "Ort", '_label -> "Ort")
 		        @helper.checkbox(newMembershipForm("withLPI"), '_label -> "Mit RSV")
-		        @helper.inputDate(newMembershipForm("begin_rsv"),args= 'class -> "date", '_label -> "RSV Beginn")  
-		        @helper.inputDate(newMembershipForm("end_rsv"),args= 'class -> "date", '_label -> "RSV Ende")  
-		        @helper.inputDate(newMembershipForm("contrib_rsv"), args= 'class -> "text", '_label -> "Beitr. Grp.")   
+		        @helper.inputDate(newMembershipForm("rsv.begin_rsv"),args= 'class -> "date", '_label -> "RSV Beginn")  
+		        @helper.inputDate(newMembershipForm("rsv.end_rsv"),args= 'class -> "date", '_label -> "RSV Ende")  
+		        @helper.inputDate(newMembershipForm("rsv.contrib_rsv"), args= 'class -> "text", '_label -> "Beitr. Grp.")   
 			</fieldset>
 		</div>
     	<div class="span-12">

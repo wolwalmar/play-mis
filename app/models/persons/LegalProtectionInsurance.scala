@@ -13,12 +13,12 @@ import play.api.Play.current
 case class LegalProtectionInsurance(
 	id: Long,
 	begin_rsv: Date,
-	end_rsv: Date,
+	end_rsv: Option[Date],
 	contrib: Int)
 
 object LegalProtectionInsurance {
 	val lpiParser: RowParser[LegalProtectionInsurance] = {
-		long("id") ~ date("begin_rsv") ~ date("end_rsv") ~ int("contrib") map {
+		long("id") ~ date("begin_rsv") ~ get[Option[Date]]("end_rsv") ~ int("contrib") map {
 			case id ~ begin_rsv ~ end_rsv ~ contrib => LegalProtectionInsurance(id, begin_rsv, end_rsv, contrib)
 		}
 	}
@@ -37,6 +37,11 @@ object LegalProtectionInsurance {
 		lpiIdParser *
 	}
 
+	def findById(id: Long): LegalProtectionInsurance = DB.withConnection {
+		implicit connection => 
+		val sql = SQL("select * from rsv where id={id}").on("id" -> id)
+		sql.as(lpiParser *).head
+	}
 
 	def insert(a: LegalProtectionInsurance): Long = {
 		DB.withConnection {
@@ -53,6 +58,36 @@ object LegalProtectionInsurance {
 					"contrib" -> a.contrib
 				).executeUpdate()
 			next
+		}
+	}
+
+	def update(a: LegalProtectionInsurance): Boolean = {
+		DB.withConnection {
+			implicit connection =>
+			SQL("""update
+						rsv
+					set 
+						"begin_rsv" -> a.begin_rsv,
+						"end_rsv" -> a.end_rsv,
+						"contrib" -> a.contrib 
+					where
+						id={id}""")
+			.on(		
+				"begin_rsv" -> a.begin_rsv,
+				"end_rsv" -> a.end_rsv,
+				"contrib" -> a.contrib,
+				"id" -> a.id).executeUpdate == 1
+		}
+	}
+
+	def delete(a: LegalProtectionInsurance): Boolean = {
+		DB.withConnection {
+			implicit connection =>
+			SQL("""delete from
+						rsv
+					where
+						id={id}""")
+			.on("id" -> a.id).executeUpdate == 1
 		}
 	}
 

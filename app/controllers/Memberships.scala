@@ -39,9 +39,10 @@ object Memberships extends Controller {
             "phoneoffice" -> text, 
             "mobile" -> text, 
             "email" -> text)(ChangeContact.apply)(ChangeContact.unapply),
-          "begin_rsv" -> date,
-          "end_rsv" -> date,
-          "contrib_rsv" -> text,
+          "rsv" -> mapping(
+            "begin_rsv" -> optional(date),
+            "end_rsv" -> optional(date),
+            "contrib_rsv" -> optional(text))(ChangeLegalProtectionInsurance.apply)(ChangeLegalProtectionInsurance.unapply),
           "withLPI" -> boolean,
           "withadmissionfee" -> boolean
       	) (NewMembership.apply)(NewMembership.unapply)
@@ -66,6 +67,13 @@ object Memberships extends Controller {
         ) (ChangeAddress.apply)(ChangeAddress.unapply)
   )
 
+  val changeRSVForm: Form[ChangeLegalProtectionInsurance] = Form(
+    mapping(
+          "begin_rsv" -> optional(date),
+          "end_rsv" -> optional(date),
+          "contrib_rsv" -> optional(text)
+        ) (ChangeLegalProtectionInsurance.apply)(ChangeLegalProtectionInsurance.unapply)
+  )
   val changeContactForm: Form[ChangeContact] = Form(
     mapping(
           "phoneHome" -> text, 
@@ -173,6 +181,40 @@ object Memberships extends Controller {
           })
   }
 
+  def changeLegalProtectionInsurance(membershipId: Long) = Action { implicit request =>
+    changeRSVForm.bindFromRequest.fold(
+      errors => { println("error"); BadRequest("error") },
+      changes => {
+          println(membershipId)
+          val ms = Membership.findByMembershipId(membershipId)
+          val address = Address.findByMsRef(ms.id)
+
+          address.rsv_ref.map { ref =>
+            val lpi = LegalProtectionInsurance.findById(ref)
+
+            changes match {
+              case ChangeLegalProtectionInsurance(None,_,_) => 
+                      Address.removeLPI(address)
+                      LegalProtectionInsurance.delete(lpi)
+              case ChangeLegalProtectionInsurance(Some(begin_rsv),end_rsv,Some(contrib_rsv)) =>
+                 LegalProtectionInsurance.update(
+                    new LegalProtectionInsurance(
+                      lpi.id, 
+                      begin_rsv,
+                      end_rsv,
+                      contrib_rsv.toInt))
+          }
+          val df = new java.text.SimpleDateFormat("yyyy-MM-dd")
+            Ok(Json.toJson(
+              Map(
+                "begin_rsv"->Json.toJson(df.format(changes.begin_rsv)),
+                "end_rsv"->Json.toJson(df.format(changes.end_rsv)),
+                "contrib_rsv"->Json.toJson(changes.contrib_rsv)
+              )))
+          }.getOrElse(BadRequest("RSV not found"))
+        })
+  }
+
   def changeContact(membershipId: Long) = Action { implicit request =>
     changeContactForm.bindFromRequest.fold(
       errors => { println("error"); BadRequest("error") },
@@ -230,9 +272,7 @@ object Memberships extends Controller {
       // Form has errors, redisplay it
       errors => {println(errors); BadRequest(html.memberships.form(errors))},
       
-      // We got a valid User value, display the summary
-            // We got a valid User value, display the summary
-      newmembership => {
+     newmembership => {
         val ms_ref = Membership.insert(new Membership(0,
                             newmembership.membership.membershipid.toLong,
                             newmembership.membership.begin_ms,
@@ -245,17 +285,19 @@ object Memberships extends Controller {
                             newmembership.person.lastname,
                             newmembership.person.birthday,
                             ms_ref))
-
-        val rsv_ref = if( newmembership.withLPI) {
-            println("mit RSV")
-            LegalProtectionInsurance.insert( new LegalProtectionInsurance(0,
-                              newmembership.begin_rsv,
-                              newmembership.end_rsv,
-                              newmembership.contrib_rsv.toInt))
-          }
-          else 0
+        val rsv_ref = newmembership.rsv match {
+              case ChangeLegalProtectionInsurance(None,_,_) => 
+                0
+              case ChangeLegalProtectionInsurance(Some(begin_rsv),end_rsv,Some(contrib_rsv)) =>
+                if( newmembership.withLPI) {
+                  LegalProtectionInsurance.insert( new LegalProtectionInsurance(0,
+                              begin_rsv,
+                              end_rsv,
+                              contrib_rsv.toInt))
+                  }
+              else 0
+        }
         
-        println("ref "+rsv_ref)
         Address.insert(new Address(0,
                             newmembership.address.street,
                             newmembership.address.number,
