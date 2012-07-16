@@ -15,20 +15,21 @@ import models.finance._
 
 
 object Memberships extends Controller {
+  lazy val dateFormat = "dd.MM.yyyy"
 	val newMembershipForm: Form[NewMembership] = Form(
     // !!! no CamelCase !!!
 		mapping(
           "membership" -> mapping(
         		"membershipid" -> text,
-            "begin_ms" -> date,
-            "end_ms" -> optional(date),
+            "begin_ms" -> date(dateFormat),
+            "end_ms" -> optional(date(dateFormat)),
             "contrib" -> text )(BrandNewMembership.apply)(BrandNewMembership.unapply),
           "person" -> mapping(
             "salutation" -> text,
             "title" -> text,
         		"firstname" -> text,
             "lastname" -> text,
-            "birthday" -> date)(ChangePerson.apply)(ChangePerson.unapply),
+            "birthday" -> optional(date(dateFormat)))(ChangePerson.apply)(ChangePerson.unapply),
           "address" -> mapping(
             "street" -> text,
             "number" -> text,
@@ -40,8 +41,8 @@ object Memberships extends Controller {
             "mobile" -> text, 
             "email" -> text)(ChangeContact.apply)(ChangeContact.unapply),
           "rsv" -> mapping(
-            "begin_rsv" -> optional(date),
-            "end_rsv" -> optional(date),
+            "begin_rsv" -> optional(date(dateFormat)),
+            "end_rsv" -> optional(date(dateFormat)),
             "contrib_rsv" -> optional(text))(ChangeLegalProtectionInsurance.apply)(ChangeLegalProtectionInsurance.unapply),
           "withLPI" -> boolean,
           "withadmissionfee" -> boolean
@@ -54,7 +55,7 @@ object Memberships extends Controller {
           "title" -> text,
           "firstname" -> text,
           "lastname" -> text,
-          "birthday" -> date
+          "birthday" -> optional(date(dateFormat))
         ) (ChangePerson.apply)(ChangePerson.unapply)
   )
 
@@ -69,8 +70,8 @@ object Memberships extends Controller {
 
   val changeRSVForm: Form[ChangeLegalProtectionInsurance] = Form(
     mapping(
-          "begin_rsv" -> optional(date),
-          "end_rsv" -> optional(date),
+          "begin_rsv" -> optional(date(dateFormat)),
+          "end_rsv" -> optional(date(dateFormat)),
           "contrib_rsv" -> optional(text)
         ) (ChangeLegalProtectionInsurance.apply)(ChangeLegalProtectionInsurance.unapply)
   )
@@ -85,9 +86,9 @@ object Memberships extends Controller {
 
   val changeMembershipForm: Form[ChangeMembership] = Form(
     mapping(
-          "begin_ms" -> date,
-          "end_ms" -> date,
-          "contrib" -> text
+          "begin_ms_dialog" -> date(dateFormat),
+          "end_ms_dialog" -> optional(date(dateFormat)),
+          "contrib_dialog" -> text
         ) (ChangeMembership.apply)(ChangeMembership.unapply)
   )
 
@@ -105,7 +106,7 @@ object Memberships extends Controller {
 
 	def details(id: Long) = Action {
 		val membershipPerson = Membership.findMembershipPersonById(id)
-		Ok(views.html.memberships.details(membershipPerson,Map("salutations" -> List("Frau","Herr","Eheleute"), "titles" -> List("Dr.", "Prof. Dr.", "Dipl.Ing."))))
+		Ok(views.html.memberships.details(membershipPerson,changeMembershipForm,Map("salutations" -> List("Frau","Herr","Eheleute"), "titles" -> List("Dr.", "Prof. Dr.", "Dipl.Ing."))))
 	}
 
 	def edit(id: Long) = TODO
@@ -243,7 +244,7 @@ object Memberships extends Controller {
 
   def changeMembership(membershipId: Long) = Action { implicit request =>
     changeMembershipForm.bindFromRequest.fold(
-      errors => { println("error"); BadRequest("error") },
+      formWithErrors => { println(formWithErrors); BadRequest("error") },
       changes => {
           println(membershipId)
           val ms = Membership.findByMembershipId(membershipId)
@@ -252,13 +253,13 @@ object Memberships extends Controller {
               ms.id, 
               membershipId,
               changes.begin_ms,
-              Option(changes.end_ms),
+              changes.end_ms,
               changes.contrib.toInt))
-          val df = new java.text.SimpleDateFormat("yyyy-MM-dd")
+          val df = new java.text.SimpleDateFormat("dd.MM.yyyy")
           Ok(Json.toJson(
               Map(
                 "begin_ms"->Json.toJson(df.format(changes.begin_ms)),
-                "end_ms"->Json.toJson(df.format(changes.end_ms)),
+                "end_ms"->Json.toJson(changes.end_ms.map { d: Date => df.format(d) }. getOrElse("")),
                 "contrib"->Json.toJson(changes.contrib)
               )))
           })

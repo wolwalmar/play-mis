@@ -1,4 +1,9 @@
-@(membershipPerson: (models.memberships.Membership,models.persons.Person,models.persons.Address, List[models.finance.Account], Option[models.persons.LegalProtectionInsurance],models.persons.Contact), defaultData: Map[String,List[String]])
+@(membershipPerson: (models.memberships.Membership,models.persons.Person,models.persons.Address, List[models.finance.Account], Option[models.persons.LegalProtectionInsurance],models.persons.Contact), changeMembershipForm: Form[models.memberships.ChangeMembership],defaultData: Map[String,List[String]])
+
+
+@import helper._
+@import helper.twitterBootstrap._
+@import java.util.Date
 
 @main("Welcome to Play 2.0") {
 	<div class="span-24">
@@ -19,7 +24,7 @@
 			<div class="span-2 "><label>Zuname:</label></div>
 			<div class="span-4 " id="lastname">@membershipPerson._2.lastname</div><br />
 			<div class="span-2 "><label>Geburtstag:</label></div>
-			<div class="span-2 " id="birthday">@membershipPerson._2.birthday</div><br /><br />
+			<div class="span-2 " id="birthday">@{membershipPerson._2.birthday.map { d: Date => d.format("dd.MM.yyyy") }.getOrElse(<em>-</em>)}</div><br /><br />
 			<div class="span-2"><button id="change-person">Ändern</button></div>
 		</fieldset>
 	</div>
@@ -32,15 +37,11 @@
 			<div class="span-2"><label>PLZ:</label></div>
 			<div class="span-2"><span id="zip">@membershipPerson._3.zip</span></div> <br />
 			<div class="span-2"><label>Ort:</label></div>
-			<div class="span-2"><span id="city">@membershipPerson._3.city</city></div> <br />
+			<div class="span-2"><span id="city">@membershipPerson._3.city</span></div> <br />
 			<div class="span-2"><label>RSV seit:</label></div>
-			<div class="span-2">@(membershipPerson._5 match {
-				case Some(lpi) => lpi.begin_rsv
-				case None => "" })</div>
+			<div class="span-2"><span id="begin_lpi">@membershipPerson._5.map { lpi: models.persons.LegalProtectionInsurance => lpi.begin_rsv.map { d: Date => d.format("dd.MM.yyyy")) }.getOrElse(<em>-</em>) }</span></div>
 			<div class="span-1"><label>bis:</label></div>
-			<div class="span-2">@(membershipPerson._5 match {
-				case Some(lpi) => lpi.end_rsv
-				case None => "" })</div><br /><br />
+			<div class="span-2"><span id="end_lpi">@membershipPerson._5.map { lpi: models.persons.LegalProtectionInsurance => lpi.end_rsv.map { d: Date => d.format("dd.MM.yyyy")) }.getOrElse(<em>-</em>) }</span></div><br /><br />
 			<div class="span-2"><button id="change-address">Ändern</button></div>
 		</fieldset>
 	</div>
@@ -49,9 +50,9 @@
 		<fieldset>
 			<legend><a id="change-membership-link">Mitgliedschaft</a></legend>
 			<div class="span-2"><label>Eintritt:</label></div>
-			<div class="span-2"><span id="begin_ms">@membershipPerson._1.begin_ms</span></div>
+			<div class="span-2"><span id="begin_ms">@membershipPerson._1.begin_ms.format("dd.MM.yyyy")</span></div>
 			<div class="span-2"><label>Austritt:</label></div> 
-			<div class="span-2" id="end_ms">@membershipPerson._1.end_ms</div> <br />
+			<div class="span-2" id="end_ms">@membershipPerson._1.end_ms.map(_.format("dd.MM.yyyy")).getOrElse { <em>-</em> }</div> <br />
 			<div class="span-2"><label>Beitr.Grp.:</label></div>
 			<div class="span-2" id="contrib">@membershipPerson._1.contrib</div><br /><br />
 			<div class="span-2"><button id="change-membership">Ändern</button></div>
@@ -94,7 +95,7 @@
 		        <tbody>
 					@for(posting <- membershipPerson._4) {
 			            <tr>
-		    	          <td>@posting.posted</td>
+		    	          <td>@posting.posted.format("dd.MM.yyyy")</td>
 		        	      <td>@posting.postingtext</td>
 		            	  <td><div align="right">@posting.amount</div></td>
 		            	</tr>
@@ -145,6 +146,7 @@
     <input type="text" name="firstname" id="firstname_input" value="@membershipPerson._2.firstname" class="text ui-widget-content ui-corner-all" />
     <label for="lastname_input">Zuname</label>
     <input type="text" name="lastname" id="lastname_input" value="@membershipPerson._2.lastname" class="text ui-widget-content ui-corner-all" />
+
     <label for="birthday_input">Geburtstag</label>
     <input type="text" name="birthday_input" id="birthday_input" value="@membershipPerson._2.birthday" class="text date ui-widget-content ui-corner-all" />
   </fieldset>
@@ -186,16 +188,11 @@
 </div>
 
 <div id="change-membership-dialog" title="Mitgliedschaft ändern">
-  <p class="validateTips">All form fields are required.</p>
-
   <form>
   <fieldset>
-    <label for="begin_ms_input">Eintrittsdatum</label><br />
-    <input type="text" name="begin_ms_input" id="begin_ms_input" class="date ui-widget-content ui-corner-all" value="@membershipPerson._1.begin_ms"/><br />
-    <label for="end_ms_input">Austrittsdatum</label><br />
-    <input type="text" name="end_ms_input" id="end_ms_input" value="@membershipPerson._1.end_ms" class="date ui-widget-content ui-corner-all" /><br />
-    <label for="zip_input">Beitragsgruppe</label><br />
-    <input type="text" name="contrib_input" id="contrib_input" value="@membershipPerson._1.contrib" class="text ui-widget-content ui-corner-all" />
+    @helper.inputDate(changeMembershipForm.fill(models.memberships.ChangeMembership(membershipPerson._1.begin_ms,None, "0"))("begin_ms_dialog"), args= 'class -> "date", '_label -> "Eintritt") 
+    @helper.inputDate(changeMembershipForm.fill(models.memberships.ChangeMembership(new java.util.Date(), membershipPerson._1.end_ms, "0"))("end_ms_dialog"), args= 'class -> "date", '_label -> "Austritt")  
+    @helper.inputText(changeMembershipForm.fill(models.memberships.ChangeMembership(new java.util.Date(), None, membershipPerson._1.contrib.toString))("contrib_dialog"), args= 'class -> "text", '_label -> "Beitr.Grp.")   
   </fieldset>
   </form>
 </div>

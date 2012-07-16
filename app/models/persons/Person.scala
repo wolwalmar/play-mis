@@ -18,7 +18,7 @@ case class Person(
 	title: String,
 	firstname: String, 
 	lastname: String, 
-	birthday: Date,
+	birthday: Option[Date],
 	ms_ref: Long)
 
 object Person extends DbAccess {
@@ -26,7 +26,7 @@ object Person extends DbAccess {
 	override val tablename = "person"
 
 	override val rowParser: RowParser[Person] = {
-		long("id") ~ str("salutation") ~ str("title") ~ str("firstname") ~ str("lastname") ~ date("birthday") ~ long("ms_ref") map {
+		long("id") ~ str("salutation") ~ str("title") ~ str("firstname") ~ str("lastname") ~ get[Option[Date]]("birthday") ~ long("ms_ref") map {
 			case id ~ salutation ~ title ~ firstname ~ lastname ~ birthday ~ ms_ref => Person(id, salutation, title, firstname, lastname, birthday, ms_ref)
 		}
 	}

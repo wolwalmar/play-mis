@@ -155,7 +155,7 @@ object Membership extends DbAccess {
                             "",
                             firstnameFrom(name1),
                             lastnameFrom(name1),
-                            new java.util.Date(),
+                            None,
                             ms_ref))
         
         	Address.insert(new Address(0,

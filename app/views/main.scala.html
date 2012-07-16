@@ -252,7 +252,7 @@
                 }
 
                 function sendMembershipForm() {
-                  var dataString = "begin_ms="+$("#begin_ms_input").val()+"&end_ms="+$("#end_ms_input").val()+"&contrib="+ $("#contrib_input").val();
+                  var dataString = "begin_ms_dialog="+$("#begin_ms_dialog").val()+"&end_ms_dialog="+$("#end_ms_dialog").val()+"&contrib_dialog="+ $("#contrib_dialog").val();
                   var dest = "/changemembership/" + $("#membershipid").html();
                   $.ajax( {
                     type: "POST",
