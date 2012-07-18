@@ -28,16 +28,6 @@ object LegalProtectionInsurance extends DbAccess {
 		}
 	}
 
-	// val lpiIdParser: RowParser[Long] = {
-	// 	long("next") map {
-	// 		case next => next
-	// 	}
-	// }
-
-	// val lpiIdRSParser: ResultSetParser[List[Long]] = {
-	// 	lpiIdParser *
-	// }
-
 	def insert(a: LegalProtectionInsurance): Long = {
 		DB.withConnection {
 			implicit connection =>
@@ -85,10 +75,5 @@ object LegalProtectionInsurance extends DbAccess {
 			.on("id" -> a.id).executeUpdate == 1
 		}
 	}
-
-	// def nextSeqNum: Long = DB.withConnection {
-	// 	implicit connection =>
-	// 		return SQL("select rsv_id_seq.nextval as next from dual").as(scalar[Long])
-	// }
 
 }

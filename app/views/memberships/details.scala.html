@@ -1,4 +1,4 @@
-@(membershipPerson: (models.memberships.Membership,models.persons.Person,models.persons.Address, List[models.finance.Account], Option[models.persons.LegalProtectionInsurance],models.persons.Contact), changeMembershipForm: Form[models.memberships.ChangeMembership],defaultData: Map[String,List[String]])
+@(membershipPerson: (models.memberships.Membership,models.persons.Person,models.persons.Address, List[models.finance.Account], Option[models.persons.LegalProtectionInsurance],models.persons.Contact), changeMembershipForm: Form[models.memberships.ChangeMembership],changePersonForm: Form[models.memberships.ChangePerson],defaultData: Map[String,List[String]])
 
 
 @import helper._
@@ -128,13 +128,15 @@
 
   <form>
   <fieldset>
-    <label for="salutation_input">Anrede</label>
+    @helper.select(changePersonForm.fill(models.memberships.ChangePerson(membershipPerson._2.salutation,"","","",None))("salutation_dialog"),options(defaultData.getOrElse("salutations",List())), '_label -> "Anrede")
+
+    <!--label for="salutation_input">Anrede</label>
     <select type="text" name="salutation_input" id="salutation_input" class="text ui-widget-content ui-corner-all" value="@membershipPerson._2.salutation">
 		@for(opt <- defaultData.getOrElse("salutations",List())) {
         	<option value="@opt">@opt</option>
 		}
         <option style="visibility:hidden" selected="selected" value="@membershipPerson._2.salutation" />
-    </select>
+    </select -->
     <label for="title_input">Titel</label>
     <select type="text" name="title_input" id="title_input" class="text ui-widget-content ui-corner-all" value="@membershipPerson._2.title">
 		@for(opt <- defaultData.getOrElse("titles",List())) {

@@ -1,4 +1,4 @@
-@(newMembershipForm: Form[models.memberships.NewMembership])
+@(newMembershipForm: Form[models.memberships.NewMembership],defaultData: Map[String,List[String]])
 
 @import helper._
 @import helper.twitterBootstrap._
@@ -8,8 +8,8 @@
     	<div class="span-12">
 	    	<fieldset>
 	    		<legend>Mitgliedsdaten</legend>
-		        @helper.inputText(newMembershipForm("person.salutation"),args= 'class -> "text", 'placeholder -> "Anrede", '_label -> "Anrede")
-		        @helper.inputText(newMembershipForm("person.title"),args= 'class -> "text", 'placeholder -> "Titel", '_label -> "Titel")   
+		        @helper.select(newMembershipForm("person.salutation"),options(defaultData.getOrElse("salutations",List())), '_label -> "Anrede")
+		        @helper.select(newMembershipForm("person.title"),options(defaultData.getOrElse("titles",List())), '_label -> "Titel")
 		        @helper.inputText(newMembershipForm("person.firstname"),args= 'class -> "text", 'placeholder -> "Vorname", '_label -> "Vorname")   
 		        @helper.inputText(newMembershipForm("person.lastname"),args= 'class -> "text", 'placeholder -> "Zuname", '_label -> "Zuname")
 		        @helper.inputText(newMembershipForm("person.birthday"),args= 'class -> "text date", '_label -> "Geburtstag")   

@@ -15,8 +15,5 @@ case class NewMembership(
 		address: ChangeAddress,
 		contact: ChangeContact,
 		rsv: ChangeLegalProtectionInsurance,
-/*		begin_rsv: java.util.Date,
-		end_rsv: java.util.Date,
-		contrib_rsv: String,
-*/		withLPI: Boolean,
+		withLPI: Boolean,
 		withadmissionfee: Boolean );

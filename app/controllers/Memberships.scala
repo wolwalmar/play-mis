@@ -96,7 +96,7 @@ object Memberships extends Controller {
    	 * Display an empty form.
    	*/
  	def form = Action {
-    	Ok(html.memberships.form(newMembershipForm));
+    	Ok(html.memberships.form(newMembershipForm,Map("salutations" -> List("Frau","Herr","Eheleute"), "titles" -> List("","Dr.", "Prof. Dr.", "Dipl.Ing."))));
   	}
 
 	def list(page: Int = 1) = Action {
@@ -106,7 +106,7 @@ object Memberships extends Controller {
 
 	def details(id: Long) = Action {
 		val membershipPerson = Membership.findMembershipPersonById(id)
-		Ok(views.html.memberships.details(membershipPerson,changeMembershipForm,Map("salutations" -> List("Frau","Herr","Eheleute"), "titles" -> List("Dr.", "Prof. Dr.", "Dipl.Ing."))))
+		Ok(views.html.memberships.details(membershipPerson,changeMembershipForm,changePersonForm,Map("salutations" -> List("Frau","Herr","Eheleute"), "titles" -> List("","Dr.", "Prof. Dr.", "Dipl.Ing."))))
 	}
 
 	def edit(id: Long) = TODO
@@ -131,7 +131,7 @@ object Memberships extends Controller {
     changePersonForm.bindFromRequest.fold(
       errors => { println("error"); BadRequest("error") },
       changes => {
-          println(membershipId)
+          println(membershipId+ ":" + changes.birthday)
           val ms = Membership.findByMembershipId(membershipId)
           val person = Person.findByMsRef(ms.id)
           Person.update(
@@ -143,14 +143,14 @@ object Memberships extends Controller {
               changes.lastname,
               changes.birthday,
               ms.membershipId))
-          val df = new java.text.SimpleDateFormat("yyyy-MM-dd")
+          val df = new java.text.SimpleDateFormat("dd.MM.yyyy")
           Ok(Json.toJson(
               Map(
                 "salutation"->Json.toJson(changes.salutation),
                 "title"->Json.toJson(changes.title),
                 "firstname"->Json.toJson(changes.firstname),
                 "lastname"->Json.toJson(changes.lastname),
-                "birthday"->Json.toJson(df.format(changes.birthday))
+                "birthday"->Json.toJson(changes.birthday.map { d: Date => df.format(d) }. getOrElse(""))
               )))
           })
   }
@@ -271,7 +271,7 @@ object Memberships extends Controller {
   def submit = Action { implicit request =>
     newMembershipForm.bindFromRequest.fold(
       // Form has errors, redisplay it
-      errors => {println(errors); BadRequest(html.memberships.form(errors))},
+      errors => {println(errors); BadRequest(html.memberships.form(errors,Map("salutations" -> List("Frau","Herr","Eheleute"), "titles" -> List("","Dr.", "Prof. Dr.", "Dipl.Ing."))))},
       
      newmembership => {
         val ms_ref = Membership.insert(new Membership(0,
