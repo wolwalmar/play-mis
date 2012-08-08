@@ -1,0 +1,32 @@
+@(account: List[models.finance.Account])
+	<div class="span-11">
+		<fieldset>
+			<legend>Konto</legend>
+
+		    <table id="accounts" summary="This is the summary text for this table."  border="0" cellspacing="0" cellpadding="0">
+		    	<caption><em>Einzahlungen und Belastungen</em></caption>
+		        <thead>
+		        	<tr>
+		            	<th class="span-4">Datum</th>
+		            	<th class="span-4">Betreff</th>
+		              	<th class="span-4 last" ><div align="right">Betrag</div></th>
+		            </tr>
+		        </thead>
+		        <tfoot>
+		        	<tr>
+		            	<td colspan="3"><div align="right">@account.foldLeft(scala.math.BigDecimal(0))((f:scala.math.BigDecimal,p:models.finance.Account) => f+p.amount)</div></td>
+		            </tr>
+		        </tfoot>
+		        <tbody>
+					@for(posting <- account) {
+			            <tr>
+		    	          <td>@posting.posted.format("dd.MM.yyyy")</td>
+		        	      <td>@posting.postingtext</td>
+		            	  <td><div align="right">@posting.amount</div></td>
+		            	</tr>
+		            }
+		         </tbody>
+		    </table>
+		</fieldset>
+	</div>
+

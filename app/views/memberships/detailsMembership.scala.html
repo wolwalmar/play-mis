@@ -1,0 +1,14 @@
+@(membership: models.memberships.Membership)
+	<div class="span-11">
+		<fieldset>
+			<legend><a id="change-membership-link">Mitgliedschaft</a></legend>
+			<div class="span-2"><label>Eintritt:</label></div>
+			<div class="span-2"><span id="begin_ms">@membership.begin_ms.format("dd.MM.yyyy")</span></div>
+			<div class="span-2"><label>Austritt:</label></div> 
+			<div class="span-2" id="end_ms">@membership.end_ms.map(_.format("dd.MM.yyyy")).getOrElse { <em>-</em> }</div> <br />
+			<div class="span-2"><label>Beitr.Grp.:</label></div>
+			<div class="span-2" id="contrib">@membership.contrib</div><br /><br />
+			<div class="span-2"><button id="change-membership">Ändern</button></div>
+		</fieldset>
+	</div>
+

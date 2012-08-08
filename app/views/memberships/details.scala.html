@@ -12,156 +12,17 @@
 		<img id="loading" src="/public/images/loading.gif" style="display:none;">
 		<hr />
 	</div>
-	<div class="span-11">
-		<fieldset>
-			<legend>Mitgliedsdaten</legend>
-			<div class="span-2 "><label>Anrede:</label></div>
-			<div class="span-3 " id="salutation">@membershipPerson._2.salutation</div>
-			<div class="span-2 "><label>Titel:</label></div>
-			<div class="span-2 " id="title">@membershipPerson._2.title</div><br />
-			<div class="span-2 "><label>Vorname:</label></div>
-			<div class="span-4 " id="firstname">@membershipPerson._2.firstname</div><br />
-			<div class="span-2 "><label>Zuname:</label></div>
-			<div class="span-4 " id="lastname">@membershipPerson._2.lastname</div><br />
-			<div class="span-2 "><label>Geburtstag:</label></div>
-			<div class="span-2 " id="birthday">@{membershipPerson._2.birthday.map { d: Date => d.format("dd.MM.yyyy") }.getOrElse(<em>-</em>)}</div><br /><br />
-			<div class="span-2"><button id="change-person">Ändern</button></div>
-		</fieldset>
-	</div>
+	@detailsPerson(membershipPerson._2)
+	@detailsAddresses(membershipPerson._3,membershipPerson._5)
+	@detailsMembership(membershipPerson._1)
+	@detailsContact(membershipPerson._6)
+	@detailsAccount(membershipPerson._4)
+	@detailsMemo()
 
-	<div class="span-12 last" id="tabs">
-		<ul>
-			<li><a href="#tabs-1">Hauptadresse</a></li>
-			<li><a href="#tabs-2">Versandadresse</a></li>
-			<li><a href="#tabs-3">Zweitobject</a></li>
-		</ul>
-		<div id="tabs-1">
-			<fieldset>
-				<legend>Adresse</legend>
-				<div class="span-2"><label>Straße:</label></div>
-				<div class="span-3"><span id="street">@membershipPerson._3.street</span> <span id="number">@membershipPerson._3.number</span></div> <br />
-				<div class="span-2"><label>PLZ:</label></div>
-				<div class="span-2"><span id="zip">@membershipPerson._3.zip</span></div> <br />
-				<div class="span-2"><label>Ort:</label></div>
-				<div class="span-2"><span id="city">@membershipPerson._3.city</span></div> <br />
-				<div class="span-2"><label>RSV seit:</label></div>
-				<div class="span-2"><span id="begin_lpi">@{membershipPerson._5.map { lpi: models.persons.LegalProtectionInsurance => lpi.begin_rsv.format("dd.MM.yyyy") }.getOrElse(<em>-</em>) }</span></div>
-				<div class="span-1"><label>bis:</label></div>
-				<div class="span-2"><span id="end_lpi">@{membershipPerson._5.map { lpi: models.persons.LegalProtectionInsurance => lpi.end_rsv.map { d: Date => d.format("dd.MM.yyyy") }.getOrElse(<em>-</em>) }}</span></div><br /><br />
-				<div class="span-2"><button id="change-address">Ändern</button></div>
-			</fieldset>
-		</div>
-		<div id="tabs-2">
-			<fieldset>
-				<legend>Adresse</legend>
-				<div class="span-2"><label>Straße:</label></div>
-				<div class="span-3"><span id="street">A-Street 4</span></div> <br />
-				<div class="span-2"><label>PLZ:</label></div>
-				<div class="span-2"><span id="zip">23456</span></div> <br />
-				<div class="span-2"><label>Ort:</label></div>
-				<div class="span-2"><span id="city">Pusemuckel</span></div> <br />
-				<div class="span-2"><label>RSV seit:</label></div>
-				<div class="span-2"><span id="begin_lpi"><em>-</em></div>
-				<div class="span-1"><label>bis:</label></div>
-				<div class="span-2"><span id="end_lpi"><em>-</em>)</span></div><br /><br />
-				<div class="span-2"><button id="change-address">Ändern</button></div>
-			</fieldset>
-		</div>
-		<div id="tabs-3">
-			<fieldset>
-				<legend>Zweitobject</legend>
-				<div class="span-2"><label>Straße:</label></div>
-				<div class="span-3"><span id="street">B-Street 4</span></div> <br />
-				<div class="span-2"><label>PLZ:</label></div>
-				<div class="span-2"><span id="zip">23456</span></div> <br />
-				<div class="span-2"><label>Ort:</label></div>
-				<div class="span-2"><span id="city">Pusemuckel</span></div> <br />
-				<div class="span-2"><label>RSV seit:</label></div>
-				<div class="span-2"><span id="begin_lpi"><em>-</em></div>
-				<div class="span-1"><label>bis:</label></div>
-				<div class="span-2"><span id="end_lpi"><em>-</em>)</span></div><br /><br />
-				<div class="span-2"><button id="change-address">Ändern</button></div>
-			</fieldset>
-		</div>
-
-	</div>
-
-	<div class="span-12">
-		<fieldset>
-			<legend><a id="change-membership-link">Mitgliedschaft</a></legend>
-			<div class="span-2"><label>Eintritt:</label></div>
-			<div class="span-2"><span id="begin_ms">@membershipPerson._1.begin_ms.format("dd.MM.yyyy")</span></div>
-			<div class="span-2"><label>Austritt:</label></div> 
-			<div class="span-2" id="end_ms">@membershipPerson._1.end_ms.map(_.format("dd.MM.yyyy")).getOrElse { <em>-</em> }</div> <br />
-			<div class="span-2"><label>Beitr.Grp.:</label></div>
-			<div class="span-2" id="contrib">@membershipPerson._1.contrib</div><br /><br />
-			<div class="span-2"><button id="change-membership">Ändern</button></div>
-		</fieldset>
-	</div>
-
-	<div class="span-12 last">
-		<fieldset>
-			<legend>Kontaktdaten</legend>
-			<div class="span-3"><label>Telefon privat:</label></div>
-			<div class="span-3" id="phoneHome">@membershipPerson._6.phoneHome</div> <br />
-			<div class="span-3"><label>Telefon dienstl.:</label></div>
-			<div class="span-3" id="phoneOffice">@membershipPerson._6.phoneOffice</div> <br />
-			<div class="span-3"><label>Mobil:</label></div>
-			<div class="span-3" id="mobile">@membershipPerson._6.mobile</div><br />
-			<div class="span-3"><label>EMail:</label></div>
-			<div class="span-3" id="email">@membershipPerson._6.email</div><br /><br />
-			<div class="span-2"><button id="change-contact">Ändern</button></div>
-		</fieldset>
-	</div>
-
-	<div class="span-12">
-		<fieldset>
-			<legend>Konto</legend>
-
-		    <table id="accounts" summary="This is the summary text for this table."  border="0" cellspacing="0" cellpadding="0">
-		    	<caption><em>Einzahlungen und Belastungen</em></caption>
-		        <thead>
-		        	<tr>
-		            	<th class="span-4">Datum</th>
-		            	<th class="span-4">Betreff</th>
-		              	<th class="span-4 last" ><div align="right">Betrag</div></th>
-		            </tr>
-		        </thead>
-		        <tfoot>
-		        	<tr>
-		            	<td colspan="3"><div align="right">@membershipPerson._4.foldLeft(scala.math.BigDecimal(0))((f:scala.math.BigDecimal,p:models.finance.Account) => f+p.amount)</div></td>
-		            </tr>
-		        </tfoot>
-		        <tbody>
-					@for(posting <- membershipPerson._4) {
-			            <tr>
-		    	          <td>@posting.posted.format("dd.MM.yyyy")</td>
-		        	      <td>@posting.postingtext</td>
-		            	  <td><div align="right">@posting.amount</div></td>
-		            	</tr>
-		            }
-		         </tbody>
-		    </table>
-		</fieldset>
-	</div>
-
-	<div class="span-12 last">
-		<fieldset>
-			<legend>Memo</legend>
-			<p>Dies soll das Memo werden</p>
-			<label></label>  <br />		
-			<label></label>  <br />		
-			<label></label>  <br />		
-			<label></label>  <br />		
-			<label></label>  <br />		
-		</fieldset>	
-	</div>
-
-
-	<div class="span-10" >
+	<div class="span-12" >
 		<a href="@routes.Memberships.list()">Zurück</a>
 	</div>
-	<div class="span-14 last" />
+	<div class="span-12 last" />
 
 <div id="change-person-dialog" title="Personendaten ändern">
   <!-- p class="validateTips">All form fields are required.</p -->
