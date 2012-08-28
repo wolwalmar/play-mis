@@ -51,8 +51,8 @@ object Membership extends DbAccess {
 		membershipParser ~ Person.rowParser ~ Account.accountParser map (flatten)
 	}
 
-	def membershipPersonAddressParser: RowParser[(Membership,Person,Address,Contact)] = {
-		membershipParser ~ Person.rowParser ~ Address.rowParser ~ Contact.rowParser map (flatten)
+	def membershipPersonAddressParser: RowParser[(Membership,Person,Address)] = {
+		membershipParser ~ Person.rowParser ~ Address.rowParser map (flatten)
 	}
 
 	def findAllMembershipsPersons: List[(Membership,Person)] = DB.withConnection {
@@ -65,35 +65,33 @@ object Membership extends DbAccess {
 		implicit connection => 
 		val sql = SQL(
 			"select "+
-				"m.*,p.*,a.*,c.* "+
+				"m.*,p.*,a.* "+
 			"from "+
 				"membership m "+
 				"join person p on p.ms_ref=m.id "+
 				"join address a on a.ms_ref=m.id "+
-				"left outer join contact c on c.ms_ref=m.id "+
 			"where m.id={id}").on("id" -> id)  
+
 		val membershipPerson = sql.as(membershipPersonAddressParser *).head
 		(membershipPerson._1,
 			membershipPerson._2,
 			membershipPerson._3,
-			findAllPostingsById(id),
+			Account.findAllByMsId(id),
 			membershipPerson._3.rsv_ref match {
 				case Some(ref) => Option(LegalProtectionInsurance.findById(ref))
 				case None => None
 			},
-			membershipPerson._4)
+			Contact.findByMsRefOption(id) match {
+				case Some(c) => c 
+				case None => Contact(0, "", "", "", "", 0)
+			}
+		)
 	}
 
 	def findByMembershipId(membershipId: Long): Membership  = DB.withConnection {
 		implicit connection => 
 		val sql = SQL("select * from membership where ms_id={membershipId}").on("membershipId" -> membershipId)
 		sql.as(membershipsParser).head
-	}
-
-	def findAllPostingsById(membershipId: Long): List[Account] = DB.withConnection {
-		implicit connection =>
-		val sql = SQL("select * from account where ms_ref={membershipId}").on("membershipId" -> membershipId)
-		sql.as(Account.accountParser *)
 	}
 
 	def insert(membership:Membership) = {
@@ -144,6 +142,7 @@ object Membership extends DbAccess {
 		val src = scala.io.Source.fromFile(filename)
 		val sdf = new java.text.SimpleDateFormat("ddMMyyyy")
 		val list = src.getLines.foreach { (line: String) =>
+			println(line)
 			val MemberRE(vid,mid,name1,name2,street,country,zip,city,begin_ms,end_ms,begin_rs,end_rs) = line
         	val ms_ref = Membership.insert(new Membership(0,
                             mid.toLong,

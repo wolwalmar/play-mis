@@ -34,6 +34,15 @@ trait DbAccess {
 		sql.as(rowParser *).head
 	}
 
+	def findByMsRefOption(ms_ref: Long): Option[Entity] = DB.withConnection {
+		implicit connection => 
+		val sql = SQL("select * from "+tablename+" where ms_ref={ms_ref}").on("ms_ref" -> ms_ref)
+		sql.as(rowParser *) match {
+			case Nil => None
+			case head::tail => Some(head)
+		}
+	}
+
 
 	val scalarParser: RowParser[Long] = {
 		long("next") map {

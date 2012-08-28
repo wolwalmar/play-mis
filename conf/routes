@@ -16,7 +16,8 @@ POST	/changeaddress/:id 		controllers.Memberships.changeAddress(id: Long)
 POST	/changemembership/:id	controllers.Memberships.changeMembership(id: Long)
 POST	/changecontact/:id		controllers.Memberships.changeContact(id: Long)
 
-POST	/uploadrsv				controllers.Memberships.douploadrsv
+GET    	/fileupload            	controllers.Application.uploadForm
+POST	/fileupload				controllers.Application.upload
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file           controllers.Assets.at(path="/public", file)

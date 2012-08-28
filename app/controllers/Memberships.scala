@@ -5,6 +5,7 @@ import play.api.mvc._
 import play.api.data._
 import play.api.data.Forms._
 import play.api.libs.json._
+import play.api.data.format.Formats._
 
 import java.util.Date
 import views._
@@ -20,10 +21,10 @@ object Memberships extends Controller {
     // !!! no CamelCase !!!
 		mapping(
           "membership" -> mapping(
-        		"membershipid" -> text,
+        		"membershipid" -> of[Long],
             "begin_ms" -> date(dateFormat),
             "end_ms" -> optional(date(dateFormat)),
-            "contrib" -> text )(BrandNewMembership.apply)(BrandNewMembership.unapply),
+            "contrib" -> number )(BrandNewMembership.apply)(BrandNewMembership.unapply),
           "person" -> mapping(
             "salutation" -> text,
             "title" -> text,
@@ -92,19 +93,21 @@ object Memberships extends Controller {
         ) (ChangeMembership.apply)(ChangeMembership.unapply)
   )
 
-	/**
-   	 * Display an empty form.
-   	*/
- 	def form = Action {
-    	Ok(html.memberships.form(newMembershipForm,Map("salutations" -> List("Frau","Herr","Eheleute"), "titles" -> List("","Dr.", "Prof. Dr.", "Dipl.Ing."))));
-  	}
+ 	def form = Action { implicit request =>
+    val theForm = if (flash.get("error").isDefined)   
+        newMembershipForm.bind(flash.data)
+      else
+        newMembershipForm
+ 
+    Ok(html.memberships.form(theForm,Map("salutations" -> List("Frau","Herr","Eheleute"), "titles" -> List("","Dr.", "Prof. Dr.", "Dipl.Ing."))));
+  }
 
-	def list(page: Int = 1) = Action {
+	def list(page: Int = 1) = Action { implicit request =>
 		val memberships = Membership.findAllMembershipsPersons
 		Ok(views.html.memberships.index(memberships))
 	}
 
-	def details(id: Long) = Action {
+	def details(id: Long) = Action { implicit request =>
 		val membershipPerson = Membership.findMembershipPersonById(id)
 		Ok(views.html.memberships.details(membershipPerson,changeMembershipForm,changePersonForm,Map("salutations" -> List("Frau","Herr","Eheleute"), "titles" -> List("","Dr.", "Prof. Dr.", "Dipl.Ing."))))
 	}
@@ -112,20 +115,6 @@ object Memberships extends Controller {
 	def edit(id: Long) = TODO
 
 	def update(id: Long) = TODO
-
-  def douploadrsv =  Action(parse.multipartFormData) { request =>
-    request.body.file("fileToUpload").map { picture =>
-      import java.io.File
-      val filename = picture.filename 
-      val contentType = picture.contentType
-      picture.ref.moveTo(new File("/temp/picture"))
-      Membership.loadFromFile("/temp/picture")
-      Ok("File uploaded")
-    }.getOrElse {
-      Redirect(routes.Application.index).flashing(
-        "error" -> "Missing file"
-    ) }
-  }
 
   def changePerson(membershipId: Long) = Action { implicit request =>
     changePersonForm.bindFromRequest.fold(
@@ -271,22 +260,22 @@ object Memberships extends Controller {
   def submit = Action { implicit request =>
     newMembershipForm.bindFromRequest.fold(
       // Form has errors, redisplay it
-      errors => {println(errors); BadRequest(html.memberships.form(errors,Map("salutations" -> List("Frau","Herr","Eheleute"), "titles" -> List("","Dr.", "Prof. Dr.", "Dipl.Ing."))))},
-      
-     newmembership => {
-        val ms_ref = Membership.insert(new Membership(0,
+      hasErrors = { form =>
+            Redirect(routes.Memberships.form).flashing(Flash(form.data) + ("error" -> "Fehler")) },
+     success = { newmembership => {
+          val ms_ref = Membership.insert(new Membership(0,
                             newmembership.membership.membershipid.toLong,
                             newmembership.membership.begin_ms,
                             newmembership.membership.end_ms,
                             newmembership.membership.contrib.toInt))
-        Person.insert(new Person(0,
+          Person.insert(new Person(0,
                             newmembership.person.salutation,
                             newmembership.person.title,
                             newmembership.person.firstname,
                             newmembership.person.lastname,
                             newmembership.person.birthday,
                             ms_ref))
-        val rsv_ref = newmembership.rsv match {
+          val rsv_ref = newmembership.rsv match {
               case ChangeLegalProtectionInsurance(None,_,_) => 
                 0
               case ChangeLegalProtectionInsurance(Some(begin_rsv),end_rsv,Some(contrib_rsv)) =>
@@ -297,9 +286,9 @@ object Memberships extends Controller {
                               contrib_rsv.toInt))
                   }
               else 0
-        }
+          }
         
-        Address.insert(new Address(0,
+          Address.insert(new Address(0,
                             newmembership.address.street,
                             newmembership.address.number,
                             newmembership.address.zip,
@@ -307,18 +296,19 @@ object Memberships extends Controller {
                             ms_ref,
                             if( newmembership.withLPI ) Some(rsv_ref) else None))
 
-        Contact.insert(new Contact(0,
+          Contact.insert(new Contact(0,
                             newmembership.contact.phoneHome,
                             newmembership.contact.phoneOffice,
                             newmembership.contact.mobile,
                             newmembership.contact.email,
                             ms_ref))
 
-        Account.insert(new Account(0,"Beitrag",new java.util.Date,new java.math.BigDecimal("-63.90"),ms_ref))
-        if( newmembership.withadmissionfee ) 
-          Account.insert(
-            new Account(0,"Aufnahmegebühr",new java.util.Date,new java.math.BigDecimal("-15.00"),ms_ref))
-        Ok(views.html.index(""))
+          Account.insert(new Account(0,"Beitrag",new java.util.Date,new java.math.BigDecimal("-63.90"),ms_ref))
+          if( newmembership.withadmissionfee ) 
+            Account.insert(
+              new Account(0,"Aufnahmegebühr",new java.util.Date,new java.math.BigDecimal("-15.00"),ms_ref))
+          Redirect(routes.Memberships.details(ms_ref)).flashing("success" -> ("Mitglied "+ newmembership.person.lastname+", "+newmembership.person.firstname+" wurde angelegt"))
+        }
       }
     )
   }

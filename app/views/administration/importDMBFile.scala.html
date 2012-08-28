@@ -1,0 +1,20 @@
+@(importForm: Form[models.administration.ImportDMBFile])(implicit flash: Flash, lang: Lang)
+
+@import helper._
+@import helper.twitterBootstrap._
+
+@main("Import") {
+  @helper.form(action = routes.Application.upload) {
+	 	<fieldset>
+	 		<legend>Import</legend>
+		  	@helper.inputText(importForm("filename"),args= 'id -> "fileToUpload", 'class -> "text", 'placeholder -> "Import-Datei", '_label -> "Dateiname")  
+		  	<div>
+		  		<button id="openfiledialog">Durchsuchen</button>
+		  	</div>
+		  	<div>
+		  		<button id="submit">Datei hochladen</button>
+		  	</div>
+ 
+		</fieldset>
+	}
+}

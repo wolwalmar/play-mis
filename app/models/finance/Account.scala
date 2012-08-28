@@ -21,6 +21,12 @@ object Account {
 		}
 	}
 
+	def findAllByMsId(membershipId: Long): List[Account] = DB.withConnection {
+		implicit connection =>
+		val sql = SQL("select * from account where ms_ref={membershipId}").on("membershipId" -> membershipId)
+		sql.as(accountParser *)
+	}
+
 	def insert(a: Account): Boolean = {
 		DB.withConnection {
 			implicit connection =>

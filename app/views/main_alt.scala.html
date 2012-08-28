@@ -1,0 +1,294 @@
+@(title: String)(content: Html)
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+        <!-- link rel="stylesheet" href=@routes.Assets.at("stylesheets/libs/blueprint/screen.css") type="text/css" media="screen, projection" />
+        <link rel="stylesheet" href=@routes.Assets.at("stylesheets/libs/blueprint/print.css") type="text/css" media="print" / -->
+        <link rel="stylesheet" href=@routes.Assets.at("stylesheets/libs/cupertino/jquery-ui-1.8.22.custom.css") type="text/css" />
+        <link rel="stylesheet" href=@routes.Assets.at("stylesheets/main.css") type="text/css" />
+
+        <!--[if IE]><link rel="stylesheet" href="blueprint/ie.css" type="text/css" media="screen, projection" /><![endif]-->
+        <script src=@routes.Assets.at("javascripts/jquery.js") type="text/javascript"></script>
+        <script src=@routes.Assets.at("javascripts/jquery.dataTables.js") type="text/javascript" language="javascript" ></script>
+        <script src=@routes.Assets.at("javascripts/ajaxfileupload.js") type="text/javascript" language="javascript" ></script>
+        <script src=@routes.Assets.at("javascripts/jquery-ui-1.8.20.custom.min.js") type="text/javascript" language="javascript" ></script>
+        <script type="text/javascript" charset="utf-8">
+            $(document).ready(function() {
+              $('#memberpool').dataTable();
+              $('#accounts').dataTable();
+
+              $("select#salutation_input option").each(function() { 
+                this.selected = (this.text == $("select#salutation_input").val()); });
+
+              $("select#title_input option").each(function() { 
+                this.selected = (this.text == $("select#title_input").val()); });
+
+            } );
+
+            $(function() {
+                $( "#tabs" ).tabs();
+                $( "#change-person-dialog" ).dialog({
+                  autoOpen: false,
+                  height: 480,
+                  width: 390,
+                  modal: true,
+                  buttons: {
+                    OK: function() {  
+                      sendPersonForm();
+                      $( this ).dialog( "close" ); 
+                    },
+                    Zurück: function() { 
+                      $( this ).dialog( "close" ); 
+                    }
+                  }
+                });
+
+                $("#change-membership-link").click(
+                  function() {
+                    $('#change-membership-dialog').dialog("open");
+                  });
+
+                $("#change-membership")
+                  .button().
+                  click(
+                  function() {
+                    $('#change-membership-dialog').dialog("open");
+                  });
+
+                $("#change-person")
+                  .button()
+                  .click(
+                    function() {
+                      $('#change-person-dialog').dialog("open");
+                    });
+
+                $("#change-address")
+                  .button()
+                  .click(
+                    function() {
+                      $('#change-address-dialog').dialog("open");
+                    });
+
+                $("#change-contact")
+                  .button()
+                  .click(
+                    function() {
+                      $('#change-contact-dialog').dialog("open");
+                    });
+
+                $("#upload-rsv-file")
+                  .button()
+                  .click(
+                    function() {
+                      $('#upload-rsv-file-dialog').dialog("open");
+                    });
+
+
+                $( "#change-membership-dialog" ).dialog({
+                  autoOpen: false,
+                  height: 435,
+                  width: 375,
+                  modal: true,
+                  buttons: {
+                    OK: function() {  
+                      sendMembershipForm();
+                      $( this ).dialog( "close" ); 
+                    },
+                    Zurück: function() { 
+                      $( this ).dialog( "close" ); 
+                    }
+                  }
+                });
+                
+                $( "#change-address-dialog" ).dialog({
+                  autoOpen: false,
+                  height: 435,
+                  width: 375,
+                  modal: true,
+                  buttons: {
+                    OK: function() {  
+                      sendAddressForm();
+                      $( this ).dialog( "close" ); 
+                    },
+                    Zurück: function() { 
+                      $( this ).dialog( "close" ); 
+                    }
+                  }
+                });
+
+                $( "#change-contact-dialog" ).dialog({
+                  autoOpen: false,
+                  height: 435,
+                  width: 375,
+                  modal: true,
+                  buttons: {
+                    OK: function() {  
+                      sendContactForm();
+                      $( this ).dialog( "close" ); 
+                    },
+                    Zurück: function() { 
+                      $( this ).dialog( "close" ); 
+                    }
+                  }
+                });
+
+                $( "#upload-rsv-file-dialog" ).dialog({
+                  autoOpen: false,
+                  height: 200,
+                  width: 400,
+                  modal: true,
+                  buttons: {
+                    OK: function() {  
+                      ajaxFileUpload();
+                      $( this ).dialog( "close" ); 
+                    },
+                    Zurück: function() { 
+                      $( this ).dialog( "close" ); 
+                    }
+                  }
+                });
+
+                function ajaxFileUpload()
+                  {
+                    $.ajaxFileUpload( {
+                        url:'/uploadrsv',
+                        secureuri:false,
+                        fileElementId:'fileToUpload',
+                        dataType: 'json',
+                        beforeSend:function()
+                        {
+                          $("#loading").show();
+                        },
+                        complete:function()
+                        {
+                          $("#loading").hide();
+                        },        
+                        success: function (data, status)
+                        {
+                          if(typeof(data.error) != 'undefined')
+                          {
+                            if(data.error != '')
+                            {
+                              alert(data.error);
+                            }else
+                            {
+                              alert(data.msg);
+                            }
+                          }
+                        },
+                        error: function (data, status, e)
+                        {
+                          alert(e);
+                        }
+                      }
+                    )
+                    
+                    return false;
+
+                  }
+
+                function sendPersonForm() {
+                  var dataString = "salutation="+$("#salutation_input").val()+"&title="+$("#title_input").val()+"&firstname="+ $("#firstname_input").val()+ "&lastname="+$("#lastname_input").val()+"&birthday="+$("#birthday_input").val();
+                  var dest = "/changeperson/" + $("#membershipid").html();
+                  $.ajax( {
+                    type: "POST",
+                    url: dest,
+                    data: dataString,
+                    dataType: "json",
+                    beforeSend:function()
+                    {
+                      $("#loading").show();
+                    },
+                    complete:function()
+                    {
+                      $("#loading").hide();
+                    },        
+                    success: function(result) {
+                        $("#salutation").html(result.salutation);
+                        $("#title").html(result.title);
+                        $("#firstname").html(result.firstname);
+                        $("#lastname").html(result.lastname);
+                        $("#birthday").html(result.birthday);
+                    }
+
+                  });
+                }
+                function sendAddressForm() {
+                  var dataString = "street="+$("#street_input").val()+"&number="+$("#number_input").val()+"&zip="+ $("#zip_input").val()+ "&city="+$("#city_input").val();
+                  var dest = "/changeaddress/" + $("#membershipid").html();
+                  $.ajax( {
+                    type: "POST",
+                    url: dest,
+                    data: dataString,
+                    dataType: "json",
+                    success: function(result) {
+                        $("#street").html(result.street);
+                        $("#number").html(result.number);
+                        $("#zip").html(result.zip);
+                        $("#city").html(result.city);
+                    }
+                  });
+                }
+
+                function sendContactForm() {
+                  var dataString = "phoneHome="+$("#phoneHome_input").val()+"&phoneOffice="+$("#phoneOffice_input").val()+"&mobile="+ $("#mobile_input").val()+ "&email="+$("#email_input").val();
+                  var dest = "/changecontact/" + $("#membershipid").html();
+                  $.ajax( {
+                    type: "POST",
+                    url: dest,
+                    data: dataString,
+                    dataType: "json",
+                    success: function(result) {
+                        $("#phoneHome").html(result.phoneHome);
+                        $("#phoneOffice").html(result.phoneOffice);
+                        $("#mobile").html(result.mobile);
+                        $("#email").html(result.email);
+                    }
+                  });
+                }
+
+                function sendMembershipForm() {
+                  var dataString = "begin_ms_dialog="+$("#begin_ms_dialog").val()+"&end_ms_dialog="+$("#end_ms_dialog").val()+"&contrib_dialog="+ $("#contrib_dialog").val();
+                  var dest = "/changemembership/" + $("#membershipid").html();
+                  $.ajax( {
+                    type: "POST",
+                    url: dest,
+                    data: dataString,
+                    dataType: "json",
+                    success: function(result) {
+                        $("#begin_ms").html(result.begin_ms);
+                        $("#end_ms").html(result.end_ms);
+                        $("#contrib").html(result.contrib);
+                    }
+                  });
+                }
+
+              } 
+            );
+
+        </script>
+        <style type="text/css">#tdright { align:"right" } </style>
+    </head>
+    <body>
+      <div class="container" style="padding:10px; border-style:solid; border-width:thick; border-color:#133fc6">
+          <div id="header" class="span-24 last">
+              <p><img src="@routes.Assets.at("images/dmb.jpg")" width="100%" /></p>
+          </div>
+
+          <div id="content" class="span-24 last">
+		        @content
+          </div>
+ 
+          <div id="footer" class="span-24 last">
+            <form><input type="button" value=" Drucken " onclick="window.print();return false;" /></form> 
+              <p>Lorem Ipsum</p>
+          </div>
+      </div>
+
+    </body>
+</html>

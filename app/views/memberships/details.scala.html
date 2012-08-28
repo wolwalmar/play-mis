@@ -1,4 +1,4 @@
-@(membershipPerson: (models.memberships.Membership,models.persons.Person,models.persons.Address, List[models.finance.Account], Option[models.persons.LegalProtectionInsurance],models.persons.Contact), changeMembershipForm: Form[models.memberships.ChangeMembership],changePersonForm: Form[models.memberships.ChangePerson],defaultData: Map[String,List[String]])
+@(membershipPerson: (models.memberships.Membership,models.persons.Person,models.persons.Address, List[models.finance.Account], Option[models.persons.LegalProtectionInsurance],models.persons.Contact), changeMembershipForm: Form[models.memberships.ChangeMembership],changePersonForm: Form[models.memberships.ChangePerson],defaultData: Map[String,List[String]])(implicit flash: Flash, lang: Lang)
 
 
 @import helper._
