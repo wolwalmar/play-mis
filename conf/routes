@@ -11,6 +11,8 @@ GET		/membership/:id/edit	controllers.Memberships.edit(id: Long)
 PUT		/membership/:id			controllers.Memberships.update(id: Long)
 POST	/memberships    		controllers.Memberships.submit
 	
+POST	/validateid/:id 		controllers.Memberships.validateMsId(id: Long)
+
 POST	/changeperson/:id 		controllers.Memberships.changePerson(id: Long)
 POST	/changeaddress/:id 		controllers.Memberships.changeAddress(id: Long)
 POST	/changemembership/:id	controllers.Memberships.changeMembership(id: Long)

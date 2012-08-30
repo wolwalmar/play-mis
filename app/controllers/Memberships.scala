@@ -116,6 +116,11 @@ object Memberships extends Controller {
 
 	def update(id: Long) = TODO
 
+  def validateMsId(membershipId: Long) = Action { implicit request =>
+    println(membershipId)
+    Ok(Json.toJson(Map("exist" -> Json.toJson(Membership.findByMembershipIdOption(membershipId).map {1}.getOrElse(0))))
+  }
+
   def changePerson(membershipId: Long) = Action { implicit request =>
     changePersonForm.bindFromRequest.fold(
       errors => { println("error"); BadRequest("error") },

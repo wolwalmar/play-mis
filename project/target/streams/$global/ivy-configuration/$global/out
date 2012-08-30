@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 [debug] Other repositories:
 [debug] Default repositories:
 [debug] 	URLRepository(typesafe-ivy-releases,sbt.Patterns@9dac96)
@@ -102,3 +103,5 @@
 [info] Resolving org.scala-tools.sbt#precompiled-2_8_1;0.11.2 ...
 [info] Resolving org.scala-tools.sbt#precompiled-2_8_0;0.11.2 ...
 [info] Resolving org.scala-tools.sbt#precompiled-2_9_0;0.11.2 ...
+=======
+>>>>>>> f7c405f87be847c243ac26b926bbadeaead365c3

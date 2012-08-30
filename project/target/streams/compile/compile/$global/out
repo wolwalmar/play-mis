@@ -1,5 +1,6 @@
 [debug] 
 [debug] Initial source changes: 
+<<<<<<< HEAD
 [debug] 	removed:Set(C:\Users\marquardt\Documents\play_work\play-mis\project\Build.scala)
 [debug] 	added: Set(C:\Users\wm\Documents\play\play-mis\project\Build.scala)
 [debug] 	modified: Set()
@@ -25,3 +26,18 @@
 [debug] 	C:\Users\wm\Documents\play\play-mis\project\Build.scala
 [debug] 	Invalidated direct: Set()
 [debug] Incrementally invalidated: Set()
+=======
+[debug] 	removed:Set()
+[debug] 	added: Set()
+[debug] 	modified: Set()
+[debug] Removed products: Set()
+[debug] Modified external sources: Set()
+[debug] Modified binary dependencies: Set()
+[debug] Initial directly invalidated sources: Set()
+[debug] 
+[debug] Sources indirectly invalidated by:
+[debug] 	product: Set()
+[debug] 	binary dep: Set()
+[debug] 	external source: Set()
+[debug] Initially invalidated: Set()
+>>>>>>> f7c405f87be847c243ac26b926bbadeaead365c3

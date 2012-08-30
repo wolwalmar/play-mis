@@ -88,10 +88,14 @@ object Membership extends DbAccess {
 		)
 	}
 
-	def findByMembershipId(membershipId: Long): Membership  = DB.withConnection {
-		implicit connection => 
+	def findByMembershipId(membershipId: Long): Membership  = DB.withConnection { implicit connection => 
 		val sql = SQL("select * from membership where ms_id={membershipId}").on("membershipId" -> membershipId)
 		sql.as(membershipsParser).head
+	}
+
+	def findByMembershipIdOption(membershipId: Long): Option[Membership]  = DB.withConnection { implicit connection => 
+		val sql = SQL("select * from membership where ms_id={membershipId}").on("membershipId" -> membershipId)
+		sql.as(membershipsParser).headOption
 	}
 
 	def insert(membership:Membership) = {
