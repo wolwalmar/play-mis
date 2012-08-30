@@ -34,7 +34,12 @@
             $("#loading").hide();
           },        
           success: function(result,status) {
-             alert("OK");
+            alert(result.exist);
+            if (result.exist==0) {
+              $("#membership_membershipid").css("background-color","green");
+            } else {
+              $("#membership_membershipid").css("background-color","red");
+            };
           }
 
         });

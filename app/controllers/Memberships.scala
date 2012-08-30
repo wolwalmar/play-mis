@@ -118,7 +118,7 @@ object Memberships extends Controller {
 
   def validateMsId(membershipId: Long) = Action { implicit request =>
     println(membershipId)
-    Ok(Json.toJson(Map("exist" -> Json.toJson(Membership.findByMembershipIdOption(membershipId).map {1}.getOrElse(0))))
+    Ok(Json.toJson(Map("exist" -> Json.toJson(Membership.findByMembershipIdOption(membershipId).map {m: Membership => 1}.getOrElse(0)))))
   }
 
   def changePerson(membershipId: Long) = Action { implicit request =>
