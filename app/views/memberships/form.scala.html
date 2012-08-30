@@ -25,16 +25,16 @@
 		        @helper.checkbox(newMembershipForm("withLPI"), '_label -> "Mit RSV")
 		        @helper.inputDate(newMembershipForm("rsv.begin_rsv"),args= 'class -> "date", '_label -> "RSV Beginn")  
 		        @helper.inputDate(newMembershipForm("rsv.end_rsv"),args= 'class -> "date", '_label -> "RSV Ende")  
-		        @helper.inputDate(newMembershipForm("rsv.contrib_rsv"), args= 'class -> "text", '_label -> "Beitr. Grp.")   
+		        @helper.inputDate(newMembershipForm("rsv.contrib_rsv"), args= 'class -> "text numeric", '_label -> "Beitr. Grp.")   
 			</fieldset>
 		</div>
     	<div class="span-12">
 			<fieldset>
 				<legend>Mitgliedschaft</legend>	    	
-		        @helper.inputText(newMembershipForm("membership.membershipid"), args= '_error -> newMembershipForm.globalError,'class -> "text", '_label -> "Mitglied-Nr.") 
+		        @helper.inputText(newMembershipForm("membership.membershipid"), args= '_error -> newMembershipForm.globalError,'class -> "text numeric", '_label -> "Mitglied-Nr.") 
 		        @helper.inputDate(newMembershipForm("membership.begin_ms"), args= 'class -> "date", '_label -> "Eintritt")  
 		        @helper.inputDate(newMembershipForm("membership.end_ms"), args= 'class -> "date", '_label -> "Austritt")  
-		        @helper.inputText(newMembershipForm("membership.contrib"), args= 'class -> "text", '_label -> "Beitr.Grp.")   
+   		        @helper.select(newMembershipForm("membership.contrib"),options(defaultData.getOrElse("mscontribgrps",List())), '_label -> "Beitr.-Grp.", 'value -> "1")   
 	        </fieldset>
 	    </div>
     	<div class="span-12">

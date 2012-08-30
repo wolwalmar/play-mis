@@ -99,7 +99,10 @@ object Memberships extends Controller {
       else
         newMembershipForm
  
-    Ok(html.memberships.form(theForm,Map("salutations" -> List("Frau","Herr","Eheleute"), "titles" -> List("","Dr.", "Prof. Dr.", "Dipl.Ing."))));
+    Ok(html.memberships.form(theForm,
+      Map("salutations" -> List("Frau","Herr","Eheleute"), 
+          "titles" -> List("","Dr.", "Prof. Dr.", "Dipl.Ing."),
+          "mscontribgrps" -> List("0","1","2","3"))));
   }
 
 	def list(page: Int = 1) = Action { implicit request =>
