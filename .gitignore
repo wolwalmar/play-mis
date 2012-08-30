@@ -11,7 +11,9 @@ logs
 precompiled
 target
 tmp
+*.out
 test-result
 eclipse
 server.pid
 project
+

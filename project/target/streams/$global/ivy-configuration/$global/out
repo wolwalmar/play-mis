@@ -1,8 +1,8 @@
 [debug] Other repositories:
 [debug] Default repositories:
-[debug] 	URLRepository(typesafe-ivy-releases,sbt.Patterns@1d1bc1f)
+[debug] 	URLRepository(typesafe-ivy-releases,sbt.Patterns@9dac96)
 [debug] 	Raw(ProjectResolver(inter-project, mapped: ))
-[debug] 	FileRepository(local,FileConfiguration(true,None),sbt.Patterns@1b6b8cd)
+[debug] 	FileRepository(local,FileConfiguration(true,None),sbt.Patterns@8a366d)
 [debug] 	Typesafe repository: http://repo.typesafe.com/typesafe/releases/
 [debug] 	public: http://repo1.maven.org/maven2/
 [debug] 	Scala-Tools Maven2 Repository: http://scala-tools.org/repo-releases
