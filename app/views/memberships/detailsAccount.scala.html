@@ -1,15 +1,15 @@
 @(account: List[models.finance.Account])
-	<div class="span-11">
-		<fieldset>
+	<div class="span6">
+		<fieldset class="detail">
 			<legend>Konto</legend>
 
-		    <table id="accounts" summary="This is the summary text for this table."  border="0" cellspacing="0" cellpadding="0">
+		    <table id="accounts" class="table table-striped" summary="This is the summary text for this table."  border="0" cellspacing="0" cellpadding="0">
 		    	<caption><em>Einzahlungen und Belastungen</em></caption>
 		        <thead>
 		        	<tr>
-		            	<th class="span-4">Datum</th>
-		            	<th class="span-4">Betreff</th>
-		              	<th class="span-4 last" ><div align="right">Betrag</div></th>
+		            	<th class="span1">Datum</th>
+		            	<th class="span2">Betreff</th>
+		              	<th class="span3" ><div align="right">Betrag</div></th>
 		            </tr>
 		        </thead>
 		        <tfoot>

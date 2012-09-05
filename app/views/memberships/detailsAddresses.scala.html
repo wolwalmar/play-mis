@@ -1,6 +1,64 @@
 @(address: models.persons.Address, lpi: Option[models.persons.LegalProtectionInsurance])
 @import java.util.Date
-	<div class="span-12 last" id="tabs">
+	<div class="span6">
+		<fieldset class="detail">
+			<div class="row">
+				<div class="tabbable span6">
+					<ul class="nav nav-tabs">
+						<li class="active"><a href="#tabs-1" data-toggle="tab">Hauptadresse</a></li>
+						<li><a href="#tabs-2" data-toggle="tab">Versandadresse</a></li>
+						<li><a href="#tabs-3" data-toggle="tab">Zweitobject</a></li>
+					</ul>
+
+					<div class="tab-content">
+						<div id="tabs-1" class="tab-pane active">
+							<div class="row">
+								<div class="span1"><label>Straße:</label></div>
+								<div class="span5"><span id="street">@address.street</span> <span id="number">@address.number</span></div>
+							</div>
+							<div class="row">
+								<div class="span1"><label>PLZ:</label></div>
+								<div class="span1"><span id="zip">@address.zip</span></div>
+								<div class="span1"><label>Ort:</label></div>
+								<div class="span3"><span id="city">@address.city</span></div>
+							</div>
+							<div class="row">
+								<div class="span1"><label>RSV seit:</label></div>
+								<div class="span1"><span id="begin_lpi">@{lpi.map { l: models.persons.LegalProtectionInsurance => l.begin_rsv.format("dd.MM.yyyy") }.getOrElse(<em>-</em>) }</span></div>
+								<div class="span1"><label>bis:</label></div>
+								<div class="span3"><span id="end_lpi">@{lpi.map { l: models.persons.LegalProtectionInsurance => l.end_rsv.map { d: Date => d.format("dd.MM.yyyy") }.getOrElse(<em>-</em>) }}</span></div>
+							</div>
+							<div class="row">
+								<div class="span6"><button id="change-address">Ändern</button></div>
+							</div>
+						</div>
+						<div id="tabs-2" class="tab-pane">
+							<div class="row">
+								<div class="span1"><label>Straße:</label></div>
+								<div class="span5"><span id="street">A-Street 4</span></div>
+							</div>
+							<div class="row">
+								<div class="span1"><label>PLZ:</label></div>
+								<div class="span1"><span id="zip">23456</span></div>
+								<div class="span1"><label>Ort:</label></div>
+								<div class="span2"><span id="city">Pusemuckel</span></div>
+							</div>
+							<div class="row">
+								<div class="span1"><label>RSV seit:</label></div>
+								<div class="span1"><span id="begin_lpi"><em>-</em></div>
+								<div class="span1"><label>bis:</label></div>
+								<div class="span3"><span id="end_lpi"><em>-</em></span></div>
+							</div>
+							<div class="row">
+								<div class="span6"><button id="change-address">Ändern</button></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+	</div>
+			<!-- fieldset>
 		<ul>
 			<li><a href="#tabs-1">Hauptadresse</a></li>
 			<li><a href="#tabs-2">Versandadresse</a></li>
@@ -53,6 +111,4 @@
 				<div class="span-2"><span id="end_lpi"><em>-</em>)</span></div><br /><br />
 				<div class="span-2"><button id="change-address">Ändern</button></div>
 			</fieldset>
-		</div>
-
-	</div>
+		</div -->

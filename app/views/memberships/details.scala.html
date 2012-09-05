@@ -6,23 +6,37 @@
 @import java.util.Date
 
 @main("Welcome to Play 2.0") {
-	<div class="span-24">
-		<hr />
-		<h1 class="good" ><span id="membershipid">@membershipPerson._1.membershipId</span> <span>@membershipPerson._2.lastname, @membershipPerson._2.firstname</span></h1>
-		<img id="loading" src="/public/images/loading.gif" style="display:none;">
-		<hr />
-	</div>
-	@detailsPerson(membershipPerson._2)
-	@detailsAddresses(membershipPerson._3,membershipPerson._5)
-	@detailsMembership(membershipPerson._1)
-	@detailsContact(membershipPerson._6)
-	@detailsAccount(membershipPerson._4)
-	@detailsMemo()
+  <div class="row">
+  	<div class="span12">
+	   	<hr />
+  		<h1 class="good" ><span id="membershipid">@membershipPerson._1.membershipId</span> <span>@membershipPerson._2.lastname, @membershipPerson._2.firstname</span></h1>
+  		<img id="loading" src="/public/images/loading.gif" style="display:none;">
+      <hr />
+    </div>
+  </div>
+  <div class="row">
+    <div class="span12">
+      <div class="row">
+    	   @detailsPerson(membershipPerson._2)
+	       @detailsAddresses(membershipPerson._3,membershipPerson._5)
+      </div>
+      <div class="row">
+	       @detailsMembership(membershipPerson._1)
+	       @detailsContact(membershipPerson._6)
+      </div>
+      <div class="row">
+	       @detailsAccount(membershipPerson._4)
+	       @detailsMemo()
+      </div>
+    </div>
+  </div>
+  <div class="row">
+  	<div class="span12" >
+	   	<a href="@routes.Memberships.list()">Zurück</a>
+	 </div>
+  </div>
 
-	<div class="span-12" >
-		<a href="@routes.Memberships.list()">Zurück</a>
-	</div>
-	<div class="span-12 last" />
+	<div class="span12" />
 
 <div id="change-person-dialog" title="Personendaten ändern">
   <!-- p class="validateTips">All form fields are required.</p -->

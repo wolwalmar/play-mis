@@ -27,7 +27,7 @@
 		    	          <td><div align="right">@membership._1.membershipId</div></td>
 		        	      <td>@membership._2.lastname</td>
 		        	      <td>@membership._2.firstname</td>
-		            	  <td><div align="right">@membership._1.begin_ms</div></td>
+		            	  <td><div align="right">@membership._1.begin_ms.format("dd.MM.yyyy")</div></td>
 						  <td><a href="@controllers.routes.Memberships.details(membership._1.id)">Details</a></td>
 		            	</tr>
 		            }

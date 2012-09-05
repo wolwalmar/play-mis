@@ -4,13 +4,18 @@
 @import helper.twitterBootstrap._
 
 @main("Import") {
-  @helper.form(action = routes.Application.upload) {
-	 	<fieldset>
-	 		<legend>Import</legend>
-		  	@helper.inputText(importForm("filename"),args= 'id -> "fileToUpload", 'class -> "text", 'placeholder -> "Import-Datei", '_label -> "Dateiname")  
 		  	<div>
 		  		<button id="openfiledialog">Durchsuchen</button>
 		  	</div>
+
+  @helper.form(action = routes.Application.upload, 'enctype -> "multipart/form-data") {
+	 	<fieldset>
+	 		<legend>Import</legend>
+
+	 		<input type="file" name="premadr/>
+
+
+		  	@helper.inputText(importForm("filename"),args= 'id -> "fileToUpload", 'type -> "file", 'class -> "text", 'placeholder -> "Import-Datei", '_label -> "Dateiname")  
 		  	<div>
 		  		<button id="submit">Datei hochladen</button>
 		  	</div>

@@ -22,7 +22,7 @@ object Application extends Controller {
   	Ok(views.html.administration.importDMBFile(importForm))
   }
 
-  def upload =  Action { implicit request =>
+  def upload_ = Action { implicit request =>
       importForm.bindFromRequest().fold(
         hasErrors = { form =>
             Redirect(routes.Application.uploadForm).flashing(Flash(form.data) +       
@@ -30,8 +30,19 @@ object Application extends Controller {
       },
       success = { newProduct =>
           // todo: operate
-          Redirect(routes.Memberships.list()).flashing("success" -> "Datei wurde verarbeitet") 
+          Redirect(routes.Memberships.list()).flashing("success" -> ("Datei "+newProduct.filename+" wurde verarbeitet")) 
       })
 
   }
+
+    def upload = Action(parse.multipartFormData) { request =>
+      request.body.file("premadr").map { premadr =>
+        import java.io.File
+        val filename = premadr.filename 
+        val contentType = premadr.contentType
+        premadr.ref.moveTo(new File("/temp/premadr"))
+        Redirect(routes.Memberships.list()).flashing( "success" -> ("Datei "+filename+" wurde verarbeitet")) 
+      }.getOrElse {
+        Redirect(routes.Application.uploadForm).flashing( "error" -> "Missing file" ) }
+      }
 }

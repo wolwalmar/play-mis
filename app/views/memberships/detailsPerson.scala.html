@@ -1,17 +1,28 @@
 @(person: models.persons.Person)
-	<div class="span-11">
-		<fieldset>
-			<legend>Mitgliedsdaten</legend>
-			<div class="span-2 "><label>Anrede:</label></div>
-			<div class="span-3 " id="salutation">@person.salutation</div>
-			<div class="span-2 "><label>Titel:</label></div>
-			<div class="span-2 " id="title">@person.title</div><br />
-			<div class="span-2 "><label>Vorname:</label></div>
-			<div class="span-4 " id="firstname">@person.firstname</div><br />
-			<div class="span-2 "><label>Zuname:</label></div>
-			<div class="span-4 " id="lastname">@person.lastname</div><br />
-			<div class="span-2 "><label>Geburtstag:</label></div>
-			<div class="span-2 " id="birthday">@{person.birthday.map { d: java.util.Date => d.format("dd.MM.yyyy") }.getOrElse(<em>-</em>)}</div><br /><br />
-			<div class="span-2"><button id="change-person">Ändern</button></div>
-		</fieldset>
-	</div>
+		<div class="span6">
+			<fieldset class="detail">
+				<legend>Mitgliedsdaten</legend>
+				<div class="row">
+					<div class="span1"><label>Anrede:</label></div>
+					<div class="span2" id="salutation">@person.salutation</div>
+					<div class="span1"><label>Titel:</label></div>
+					<div class="span2" id="title">@person.title</div>
+				</div>
+
+				<div class="row">
+					<div class="span1"><label>Vorname:</label></div>
+					<div class="span2" id="firstname">@person.firstname</div>
+					<div class="span1"><label>Zuname:</label></div>
+					<div class="span2" id="lastname">@person.lastname</div>
+				</div>
+
+				<div class="row">				
+					<div class="span1"><label>Geburtstag:</label></div>
+					<div class="span5" id="birthday">@{person.birthday.map { d: java.util.Date => d.format("dd.MM.yyyy") }.getOrElse(<em>-</em>)}</div><br />
+				</div>
+
+				<div class="row">
+					<div class="span6"><button id="change-person">Ändern</button></div>
+				</div>
+			</fieldset>
+		</div>

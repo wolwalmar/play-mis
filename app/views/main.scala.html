@@ -33,6 +33,10 @@
           margin-bottom: 6px !important;
           clear: both;
       }
+
+      fieldset.detail {
+        outline: 1px solid;
+      }
     </style>
 
     <script type="text/javascript" language="javascript" src=@routes.Assets.at("javascripts/jquery.js")></script>
@@ -83,8 +87,6 @@
           }
         });
 
-
-
         $( "#membership_membershipid" ).keyup(function() {
             validateMemberId()
           });
@@ -119,6 +121,12 @@
 
         });
       }
+
+      $('#openfiledialog').button().click(function() {
+          alert("hello");
+          $('<input type="file"/>').attr('value');
+      });
+
     </script>
 
   <body>
