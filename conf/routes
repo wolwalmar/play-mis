@@ -10,7 +10,7 @@ GET		/membership/:id			controllers.Memberships.details(id: Long)
 GET		/membership/:id/edit	controllers.Memberships.edit(id: Long)
 PUT		/membership/:id			controllers.Memberships.update(id: Long)
 POST	/memberships    		controllers.Memberships.submit
-	
+
 POST	/validateid/:id 		controllers.Memberships.validateMsId(id: Long)
 
 POST	/changeperson/:id 		controllers.Memberships.changePerson(id: Long)
@@ -18,8 +18,11 @@ POST	/changeaddress/:id 		controllers.Memberships.changeAddress(id: Long)
 POST	/changemembership/:id	controllers.Memberships.changeMembership(id: Long)
 POST	/changecontact/:id		controllers.Memberships.changeContact(id: Long)
 
-GET    	/fileupload            	controllers.Application.uploadForm
-POST	/fileupload				controllers.Application.upload
+GET    	/fileupload            	controllers.FileUploader.uploadForm
+POST	/fileupload				controllers.FileUploader.upload
+GET		/premiumadress 			controllers.FileUploader.premiumForm
+POST	/premiumadress 			controllers.FileUploader.loadPremium
+	
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file           controllers.Assets.at(path="/public", file)

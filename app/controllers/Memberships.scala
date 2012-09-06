@@ -13,10 +13,18 @@ import models.memberships._
 import models.persons._
 import models.finance._
 
+import models.administration.ImportDMBFile
 
 
 object Memberships extends Controller {
   lazy val dateFormat = "dd.MM.yyyy"
+
+  val importForm: Form[ImportDMBFile] = Form(
+    mapping(
+          "filename" -> text
+        ) (ImportDMBFile.apply)(ImportDMBFile.unapply)
+  )
+
 	val newMembershipForm: Form[NewMembership] = Form(
     // !!! no CamelCase !!!
 		mapping(

@@ -146,7 +146,6 @@ object Membership extends DbAccess {
 		val src = scala.io.Source.fromFile(filename)
 		val sdf = new java.text.SimpleDateFormat("ddMMyyyy")
 		val list = src.getLines.foreach { (line: String) =>
-			println(line)
 			val MemberRE(vid,mid,name1,name2,street,country,zip,city,begin_ms,end_ms,begin_rs,end_rs) = line
         	val ms_ref = Membership.insert(new Membership(0,
                             mid.toLong,
@@ -171,5 +170,9 @@ object Membership extends DbAccess {
 
 		}
 		src.close()
+	}
+
+	def premiumAdress(filename: String) = {
+		true
 	}
 }

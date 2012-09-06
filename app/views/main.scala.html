@@ -147,14 +147,16 @@
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Mitglieder <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  <li><a href="@routes.Memberships.list()">Liste</a></li>
-                  <li><a href="@routes.Memberships.form">Neu</a></li>
+                  <li><a href="@routes.Memberships.list()">Mitgliedschaften</a></li>
+                  <li><a href="@routes.Memberships.form">Neue Mitgliedschaft</a></li>
+                  <li class="divider"></li>
+                  <li><a href="@routes.FileUploader.premiumForm">Premiumadress</a></li>
                 </ul>
               </li>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Verwaltung <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  <li><a href="@routes.Application.uploadForm">Daten importieren</a></li>
+                  <li><a href="@routes.FileUploader.uploadForm">Daten importieren</a></li>
                   <li><a href="#">Another action</a></li>
                   <li><a href="#">Something else here</a></li>
                   <li class="divider"></li>

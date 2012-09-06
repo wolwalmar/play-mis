@@ -3,10 +3,10 @@
 @import helper._
 @import helper.twitterBootstrap._
 
-@main("Import") {
-  @helper.form(action = routes.FileUploader.upload, 'enctype -> "multipart/form-data") {
+@main("Premiumadress") {
+  @helper.form(action = routes.FileUploader.loadPremium, 'enctype -> "multipart/form-data") {
 	 	<fieldset>
-	 		<legend>Import</legend>
+	 		<legend>Postrückläufer</legend>
 
 	 		<input type="file" name="importdmb"/>
 
