@@ -39,7 +39,7 @@ object FileUploader extends Controller {
       import java.io.File
       importdmb.ref.moveTo(new File("/temp/importdmb"),true)
       Membership.premiumAdress("/temp/importdmb")
-      Redirect(routes.Memberships.list()).flashing( "success" -> ("Datei "+importdmb.filename+" wurde verarbeitet")) 
+      Redirect(routes.Memberships.premiumAdress) 
     }.getOrElse {
       Redirect(routes.FileUploader.uploadForm).flashing( "error" -> "Missing file" ) 
     }

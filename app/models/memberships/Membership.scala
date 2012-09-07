@@ -173,6 +173,11 @@ object Membership extends DbAccess {
 	}
 
 	def premiumAdress(filename: String) = {
-		true
+		val MemberRE = """.{1}(.{3})(.{8})(.{30})(.{30})(.{30})(.{3})(.{5})(.{24}).{4}(.{8})(.{8}).{3}(.{8})(.{8}).*""".r
+		val src = scala.io.Source.fromFile(filename)
+		val sdf = new java.text.SimpleDateFormat("ddMMyyyy")
+		val list = src.getLines.foreach { line: String =>
+			println(line)
+		}
 	}
 }
