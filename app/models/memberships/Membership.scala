@@ -173,11 +173,40 @@ object Membership extends DbAccess {
 	}
 
 	def premiumAdress(filename: String) = {
-		val MemberRE = """.{1}(.{3})(.{8})(.{30})(.{30})(.{30})(.{3})(.{5})(.{24}).{4}(.{8})(.{8}).{3}(.{8})(.{8}).*""".r
-		val src = scala.io.Source.fromFile(filename)
-		val sdf = new java.text.SimpleDateFormat("ddMMyyyy")
-		val list = src.getLines.foreach { line: String =>
-			println(line)
+		val MemberRE = """.{107}(.{24}).{61}(.{2})(.{2}).{9}.{9}.{14}.{50}.{50}.{50}.{50}.{50}.{20}.{5}.{50}.{12}.{35}(.{50})(.{50})(.{50})(.{50})(.{50})(.{20})(.{5})(.{50})(.{12})(.{50})(.{50})(.{50})(.{50})(.{50})(.{20})(.{12})(.{50})(.{50}).*""".r
+		val src = scala.io.Source.fromFile(filename,"ISO-8859-1")
+		PremiumAdress.clear
+		try {
+			src.getLines.foreach { line: String =>
+				val MemberRE(aboNr,sdgs,adrMerk,e_na1,e_na2,e_na3,e_na4,e_str,e_hnr,e_plz,e_ort,e_postf,nsa_na1,nsa_na2,nsa_na3,nsa_na4,nsa_str,nsa_hnr,nsa_plz,nsa_ort,nsa_land) = line
+				PremiumAdress.insert(
+					PremiumAdress(
+						aboNr.substring(3).trim.toInt,
+						sdgs,
+						adrMerk,
+						e_na1.trim,
+						e_na2.trim,
+						e_na3.trim,
+						e_na4.trim,
+						e_str.trim,
+						e_hnr.trim,
+						e_plz.trim,
+						e_ort.trim,
+						e_postf.trim,
+						nsa_na1.trim,
+						nsa_na2.trim,
+						nsa_na3.trim,
+						nsa_na4.trim,
+						nsa_str.trim,
+						nsa_hnr.trim,
+						nsa_plz.trim,
+						nsa_ort.trim,
+						nsa_land.trim,
+						0))			
+				}
+		} finally {
+			src.close()
 		}
+
 	}
 }

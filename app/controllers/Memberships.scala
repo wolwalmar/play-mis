@@ -330,6 +330,7 @@ object Memberships extends Controller {
   }
 
   def premiumAdress =  Action { implicit request =>
-    Ok(views.html.memberships.premiumAdressView())
+
+    Ok(views.html.memberships.premiumAdressView(PremiumAdress.findAll))
   }
 }

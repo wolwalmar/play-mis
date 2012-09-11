@@ -1,4 +1,4 @@
-@()(implicit flash: Flash, lang: Lang)
+@(premiumAdressList:List[models.persons.PremiumAdress])(implicit flash: Flash, lang: Lang)
 
 
 @main("Play-Mis") {
@@ -21,7 +21,7 @@
   			<div>
   			<div class="row">
   				<div class="span8">
-			  		<table>
+			  		<table id="premiumadress" class="table table-striped" border="0" cellspacing="0" cellpadding="0">
 			  			<thead>
 			  				<tr>
 			  					<td>Mitgl.Nr.</td>
@@ -33,15 +33,18 @@
 			  				</tr>
 			  			</thead>
 			  			<tbody>
+							@for(pa <- premiumAdressList) {
+
 			  				<tr>
-				  				<td>1234</td>
-				  				<td>Potter</td>
-				  				<td>Harry</td>
-				  				<td>Wizard 1</td>
-				  				<td>66669</td>
-				  				<td>Zauberberg</td>
-				  				<td>verarbeitet</td>
+				  				<td>@pa.ms_id</td>
+				  				<td>@pa.e_na1</td>
+				  				<td>@pa.e_na2</td>
+				  				<td>@pa.e_str</td>
+				  				<td>@pa.e_plz</td>
+				  				<td>@pa.e_ort</td>
+				  				<td>@pa.status</td>
 				  			</tr>
+				  		}
 				  		</tbody>
 				  	</table>
 				<div>
